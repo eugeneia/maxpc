@@ -1,3 +1,5 @@
+;;;; Composite combinators and macros of the core library.
+
 (in-package :maxpc)
 
 (defun %maybe (parser)
@@ -9,12 +11,14 @@
 (defun %some (parser)
   (%and parser (%any parser)))
 
-(defun ?test (parser predicate &rest arguments)
-  (?satisfies (lambda (value) (apply predicate value arguments))
-              parser))
+(defmacro ?test ((predicate &rest arguments) &optional (parser (=element))
+                 &aux (value-sym (gensym "value")))
+  `(?satisfies (lambda (,value-sym)
+                 (funcall ,predicate ,value-sym ,@arguments))
+               ,parser))
 
 (defun ?eq (x &optional (parser (=element)))
-  (?test parser 'eq x))
+  (?test ('eq x) parser))
 
 (defmacro =destructure ((&rest bindings) parser &body forms
                         &aux (result-sym (gensym "result")))

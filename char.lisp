@@ -14,8 +14,8 @@
    {?char} matches _char_. {?char} is case sensitive unless _case-sensitive-p_
    is _false_."
   (if case-sensitive-p
-      (?test (=element) 'char= char)
-      (?test (=element) 'char-equal char)))
+      (?test ('char= char))
+      (?test ('char-equal char))))
 
 (defun ?string (string &optional (case-sensitive-p t))
   "*Arguments and Values:*
@@ -45,7 +45,7 @@
   "*Description:*
 
    {?whitespace} matches an atom that is a member of {*whitespace*}."
-  (?test (=element) 'member *whitespace* :test 'char=))
+  (?test ('member *whitespace* :test 'char=)))
 
 (defun %skip-whitespace (parser)
   "*Arguments and Values:*

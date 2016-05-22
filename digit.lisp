@@ -10,7 +10,7 @@
    *Description:*
 
    {?digit} matches a single digit _character_ in the specified _radix_."
-  (?test (=element) 'digit-char-p radix))
+  (?test ('digit-char-p radix)))
 
 (defun =natural-number (&optional (radix 10))
   "*Arguments and Values:*
@@ -39,8 +39,7 @@
    {#\\\\-} for positive and negative values respectively. The default is a
    positive value."
   (=destructure (sign number)
-      (=list (%maybe (%and (?test (=element) 'member '(#\+ #\-))
-                           (=element)))
+      (=list (%maybe (%and (?test ('member '(#\+ #\-))) (=element)))
              (=natural-number radix))
     (case sign
       (#\- (- number))
