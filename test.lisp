@@ -1,3 +1,9 @@
+(defpackage maxpc.test
+  (:documentation
+   "Test cases for MPC.")
+  (:use :cl :maxpc :maxpc.char :maxpc.digit)
+  (:export :run-tests))
+
 (in-package :maxpc.test)
 
 (defun test-end ()

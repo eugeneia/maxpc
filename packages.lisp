@@ -46,9 +46,3 @@ turn a fork of Drew Crampsie’s “Smug”.")
   (:export :?digit
            :=natural-number
            :=integer-number))
-
-(defpackage maxpc.test
-  (:documentation
-   "Test cases for MPC.")
-  (:use :cl :maxpc :maxpc.char :maxpc.digit)
-  (:export :run-tests))

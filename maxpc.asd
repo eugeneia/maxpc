@@ -18,7 +18,4 @@
                (:file "char"
                       :depends-on ("packages" "input" "primitives" "more"))
                (:file "digit"
-                      :depends-on ("packages" "input" "primitives" "more"))
-               (:file "test"
-                      :depends-on ("packages" "input" "primitives"
-                                   "more" "char" "digit"))))
+                      :depends-on ("packages" "input" "primitives" "more"))))
