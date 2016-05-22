@@ -1,7 +1,7 @@
 (in-package :maxpc)
 
 (defun %maybe (parser)
-  (%or parser (%value)))
+  (%or parser (?list)))
 
 (defun ?not (parser)
   (%diff (=transform (=element) (constantly nil)) parser))

@@ -1,15 +1,11 @@
+;;;; Primitive parsers and combinators—axioms, so to speak.
+
 (in-package :maxpc)
 
 (defun ?end  ()
   (lambda (input)
     (when (input-empty-p input)
       input)))
-
-(defun %value (&optional (value 'no-value))
-  (case value
-    (no-value 'identity)
-    (otherwise (lambda (input)
-                 (values input value t)))))
 
 (defun =element ()
   (lambda (input)

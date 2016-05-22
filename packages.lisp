@@ -8,7 +8,6 @@ turn a fork of Drew Crampsie’s “Smug”.")
            :%handler-case
            :%restart-case
            :?end
-           :%value
            :=element
            :?fail
            :?satisfies
