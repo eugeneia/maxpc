@@ -14,8 +14,11 @@
 
 (defun parse (source parser)
   (let ((*input-start* (make-input source)))
-    (multiple-value-bind (rest value present-p) (funcall parser *input-start*)
-      (values value present-p (and rest (input-empty-p rest))))))
+    (multiple-value-bind (rest value) (funcall parser *input-start*)
+      (values value
+              (not (null rest))
+              (or (input-empty-p *input-start*)
+                  (and rest (input-empty-p rest)))))))
 
 (defun parse-line-position (input position)
   "Parses line position of POSITION in INPUT."
