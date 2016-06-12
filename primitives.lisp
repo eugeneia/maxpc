@@ -75,12 +75,10 @@
          finally (return (values rest value present-p))))))
 
 ;; Set difference
-(defun %diff (parser &rest parsers)
-  (let ((punion (apply '%or parsers)))
+(defun %diff (parser &rest not-parsers)
     (lambda (input)
-      (multiple-value-bind (rest value present-p) (funcall parser input)
-        (when (and rest (null (funcall punion input)))
-          (values rest value present-p))))))
+      (unless (funcall punion input)
+        (funcall parser input)))))
 
 (defun =transform (parser function)
   (lambda (input)
