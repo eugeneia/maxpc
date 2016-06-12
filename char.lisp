@@ -77,8 +77,8 @@
    sequence_ as a _string_. The terinating {#\\\\Newline} _character_ is not
    included in _string_ unless _keep-newline-p_ is _true_."
   (=destructure (line _)
-      (=list (=subseq (%any (?not (%or (?newline) (?end)))))
-             (%maybe (?newline)))
+      (%or (=list (=subseq (%any (?not (?newline)))) (?newline))
+           (=list (=subseq (%some (?not (?end)))) (?end)))
     (if keep-newline-p
         (format nil "~a~%" #1=(coerce line 'string))
         #1#)))
