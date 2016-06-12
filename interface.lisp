@@ -66,16 +66,18 @@
 	  (values position line character))
 	position)))
 
-(defun cases-to-parser-cases (cases input)
+(defun cases-to-parser-cases (cases input-sym)
   "Utility macro function for =HANDLER-CASE and =RESTART-CASE."
-  (loop for case in cases do
-       (assert (= 3 (length case)) (case) "Invalid case: ~a" case)
-     collect
-       `(,(first case)
-	 ,(second case)
-	  (funcall ,(third case) ,input))))
+  (loop for case in cases collect
+       (destructuring-bind (typespec lambda-list &rest forms) case
+         `(,typespec ,lambda-list
+                     ,@(butlast forms)
+                     (funcall ,@(last forms) ,input-sym)))))
 
-(defmacro %handler-case (parser &rest handlers)
+(defmacro %handler-case (parser &body clauses
+                         &aux (input-sym (gensym "input"))
+                              (parser-sym (gensym "parser")))
+
   "*Arguments and Values:*
 
    _parser_—a _parser_.
@@ -88,16 +90,16 @@
    applying _parser_ to the input. _Handlers_ must return _parsers_. If
    _parser_ signals an _error_ matched by a _handler_, the _parser_
    returned by the _handler_ will be applied to the input."
-  (let ((parser-sym (gensym "PARSER"))
-	(input (gensym "INPUT")))
-    `(let ((,parser-sym ,parser))
-       (lambda (,input)
-	 (let ((*input-fail* ,input))
-	   (handler-case (funcall ,parser-sym ,input)
-	     ,@(cases-to-parser-cases handlers input)))))))
-
-(defmacro %restart-case (parser &rest restarts)
   "*Arguments and Values:*
+  `(let ((,parser-sym ,parser))
+     (lambda (,input-sym)
+       (let ((*input-fail* ,input-sym))
+         (handler-case (funcall ,parser-sym ,input-sym)
+           ,@(cases-to-parser-cases clauses input-sym))))))
+
+(defmacro %restart-case (parser &rest clauses
+                         &aux (input-sym (gensym "input"))
+                              (parser-sym (gensym "parser")))
 
    _parser_—a _parser_.
 
@@ -109,10 +111,8 @@
    applying _parser_ to the input. _Restarts_ must return _parsers_. If
    _parser_ signals an _error_ matched by a _restart_, the _parser_
    returned by the _restart_ will be applied to the input."
-  (let ((parser-name (gensym "PARSER"))
-	(input (gensym "INPUT")))
-    `(let ((,parser-name ,parser))
-       (lambda (,input)
-	 (let ((*input-fail* ,input))
-           (restart-case (funcall ,parser-name ,input)
-             ,@(cases-to-parser-cases restarts input)))))))
+  `(let ((,parser-sym ,parser))
+     (lambda (,input-sym)
+       (let ((*input-fail* ,input-sym))
+         (restart-case (funcall ,parser-sym,input-sym)
+           ,@(cases-to-parser-cases clauses input-sym))))))
