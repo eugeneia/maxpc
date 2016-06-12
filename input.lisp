@@ -140,6 +140,7 @@
 (defmethod input-sequence ((input index-array) (length fixnum))
   (declare (optimize (speed 3) (debug 0) (safety 0)))
   (make-array length
+              :element-type (input-element-type input)
               :displaced-to (index-array-array input)
               :displaced-index-offset (index-array-position input)))
 
