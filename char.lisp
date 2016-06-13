@@ -7,12 +7,17 @@
 
    _char_—a _character_.
 
-   _case-sensitive-p_—a _generalized boolean_. The default is _true_.
+   _case‑sensitive‑p_—a _generalized boolean_. The default is _true_.
 
    *Description:*
 
-   {?char} matches _char_. {?char} is case sensitive unless _case-sensitive-p_
-   is _false_."
+   {?char} matches _char_. {?char} is case sensitive unless _case‑sensitive‑p_
+   is _false_.
+
+   *Exceptional Situations:*
+
+   If the next element is not a _character_ an _error_ of _type_ {type‑error}
+   is signaled."
   (if case-sensitive-p
       (?test ('char= char))
       (?test ('char-equal char))))
@@ -22,12 +27,17 @@
 
    _string_—a _string_.
 
-   _case-sensitive-p_—a _generalized boolean_. The default is _true_.
+   _case‑sensitive‑p_—a _generalized boolean_. The default is _true_.
 
    *Description:*
 
-   {?string} matches _string_. {?string} is case sensitive unless
-   _case-sensitive-p_ is _false_."
+   {?string} matches the _characters_ in _string_ in sequence. {?string} is
+   case sensitive unless _case‑sensitive‑p_ is _false_.
+
+   *Exceptional Situations:*
+
+   If an element attempted to be matched is not a _character_ an _error_ of
+   _type_ {type‑error} is signaled."
   (apply '?list (loop for char across string collect
                      (?char char case-sensitive-p))))
 
@@ -44,7 +54,12 @@
 (defun ?whitespace ()
   "*Description:*
 
-   {?whitespace} matches an atom that is a member of {*whitespace*}."
+   {?whitespace} matches an element that is a member of {*whitespace*}.
+
+   *Exceptional Situations:*
+
+   If the next element is not a _character_ an _error_ of _type_ {type‑error}
+   is signaled."
   (?test ('member *whitespace* :test 'char=)))
 
 (defun %skip-whitespace (parser)
@@ -54,28 +69,47 @@
 
    *Description:*
 
-   {=skip-whitespace} matches zero or more atoms that are members of
-   {*whitespace*} and then applies _parser_ to the remaining input. If _parser_
-   succeeds {=skip-whitespace} returns its result, otherwise it fails."
+   {%skip‑whitespace} matches zero or more elements that are members of
+   {*whitespace*} and then matches _parser_. If _parser_ produces a result
+   value then {%skip‑whitespace} produces that value as its result value.
+
+   *Examples:*
+
+   #code#
+   (parse \"a\" (%skip-whitespace (?char #\\a))) → NIL, T, T
+   (parse \"   a\" (%skip-whitespace (?char #\\a))) → NIL, T, T
+   #"
   (=destructure (_ result) (=list (%any (?whitespace)) parser)))
 
 (defun ?newline ()
   "*Description:*
 
-   {?newline} matches a {#\\\\Newline} _character_."
+   {?newline} matches the {#\\\\Newline} _character_."
   (?char #\Newline))
 
 (defun =line (&optional keep-newline-p)
   "*Arguments and Values:*
 
-   _keep-newline-p_—a _generalized boolean_. The default is _false_.
+   _keep‑newline‑p_—a _generalized boolean_. The default is _false_.
 
    *Description:*
 
-   {=line} matches a sequence of zero or more _characters_ terminated by a
-   {#\\\\Newline} _character_ or end of input, and returns the _character
-   sequence_ as a _string_. The terinating {#\\\\Newline} _character_ is not
-   included in _string_ unless _keep-newline-p_ is _true_."
+   {=line} matches zero or more _characters_ in sequence followed by a
+   {#\\\\Newline} _character_ or the end of input, and produces the _string_ of
+   _characters_ as its result value. The terminating {#\\\\Newline} _character_
+   is not included in _string_ unless _keep‑newline‑p_ is _true_.
+
+   *Examples:*
+
+   #code#
+   (parse (format nil \"foo~%bar~%baz\") (%any (=line)))
+   → (\"foo\" \"bar\" \"baz\"), T, T
+   #
+
+   *Exceptional Situations:*
+
+   If an element attempted to be matched is not a _character_ an _error_ of
+   _type_ {type‑error} is signaled."
   (=destructure (line _)
       (%or (=list (=subseq (%any (?not (?newline)))) (?newline))
            (=list (=subseq (%some (?not (?end)))) (?end)))

@@ -12,8 +12,25 @@
 
 (defvar *input-fail*)
 
-(defun parse (source parser)
-  (let ((*input-start* (make-input source)))
+(defun parse (input parser)
+  "→ _result_, _match‑p_, _end‑p_
+
+   *Arguments and Values:*
+
+   _input_—a _sequence_ or _stream_.
+
+   _parser_—a parser.
+
+   _result_—an _object_.
+
+   _match‑p_, _end‑p_—_generalized booleans_.
+
+   *Description:*
+
+   {parse} applies _parser_ to _input_ and returns its _result value_ or {nil}.
+   _Match‑p_ is _true_ if _parser_ _matched_ the _input_. _End‑p_ is _true_ if
+   _parser_ _matched_ the complete _input_."
+  (let ((*input-start* (make-input input)))
     (multiple-value-bind (rest value) (funcall parser *input-start*)
       (values value
               (not (null rest))
@@ -43,19 +60,18 @@
 
    *Description:*
 
-   {get-input-position} returns the number of items read from the
-   input. Additionally, _line_ and _column_ positions are returned if the
-   input's _element type_ is {character}. Lines are counted starting at 1
-   while columns are counted starting from 0.
+   {get‑input‑position} returns the number of elements read from the input so
+   far. Additionally, _line_ and _column_ positions are returned if the input's
+   _element type_ is {character}. Lines are counted starting at one while
+   columns are counted starting from zero.
 
-   {get-input-position} may only be called from within the body of
-   {?fail}, the handlers of {%handler-case} or the restarts of
-   {%restart-case}.
+   {get‑input‑position} may only be called from within the body of {?fail}, the
+   handlers of {%handler‑case} or the restarts of {%restart‑case}.
 
    *Exceptional Situations:*
 
-   {get-input-position} signals an _error_ of _type_ {simple-error}
-   unless called within {?fail}, {%handler-case} or {%restart-case}."
+   {get‑input‑position} signals an _error_ of _type_ {simple‑error} unless
+   called within {?fail}, {%handler‑case} or {%restart‑case}."
   (unless *input-fail*
     (error "GET-INPUT-POSITION may only be called inside =FAIL,
 =HANDLER-CASE and =RESTART-CASE."))
@@ -77,20 +93,55 @@
 (defmacro %handler-case (parser &body clauses
                          &aux (input-sym (gensym "input"))
                               (parser-sym (gensym "parser")))
+  "_clauses_::= {{}↓_error‑clause_{\\}}\\*
 
-  "*Arguments and Values:*
+   _error‑clause_::=
+     {(}_typespec_ {([}_var_{])}
+        {{}_declaration_{\\}}\\* {{}_form_{\\}}\\* _parser‑form_{)}
+
+   *Arguments and Values:*
 
    _parser_—a _parser_.
 
-   _handlers_—handler clauses for {handler-case}.
+   _typespec_—a _type specifier_.
+
+   _var_—a _variable name_.
+
+   _declaration_—a {declare} _expression_; not evaluated.
+
+   _form_—a _form_.
+
+   _parser‑form_—a _form_ that evaluates to a _parser_.
 
    *Description:*
 
-   {%handler-case} establishes _handlers_ as if by {handler-case} before
-   applying _parser_ to the input. _Handlers_ must return _parsers_. If
-   _parser_ signals an _error_ matched by a _handler_, the _parser_
-   returned by the _handler_ will be applied to the input."
-  "*Arguments and Values:*
+   {%handler‑case} executes _parser_ in a _dynamic environment_ where handlers
+   are active as if by {handler‑case}. If a _condition_ is handled by
+   {%handler‑case}, _parser‑form_ is evaluated and the resulting _parser_ is
+   applied.
+
+   *Examples:*
+
+   #code#
+   (parse \"01x2\"
+          (%any (%handler-case
+                    (=transform
+                     (=element)
+                     (lambda (c)
+                       (if (digit-char-p c)
+                           c
+                           (error \"Not a digit: ~c\" c))))
+                  (error (e)
+                    (format t \"Error at position ~a: ~a~%\"
+                            (get-input-position) e)
+                    (?list (=element))))))
+   ▷ Error at position 2: Not a digit: x
+   → (#\\0 #\\1 #\\2), T, T
+   #
+
+   *See Also:*
+
+   {handler‑case}."
   `(let ((,parser-sym ,parser))
      (lambda (,input-sym)
        (let ((*input-fail* ,input-sym))
@@ -100,17 +151,68 @@
 (defmacro %restart-case (parser &rest clauses
                          &aux (input-sym (gensym "input"))
                               (parser-sym (gensym "parser")))
+  "_clauses_::= {{}↓_restart‑clause_{\\}}\\*
+
+   _restart‑clause_::=
+     {(}_case‑name_ {([}_lambda‑list_{])}
+     〚{:interactive} _interactive‑expression_ |
+       {:report} _report‑expression_ |
+       {:test} _test‑expression_〛
+     {{}_declaration_{\\}}\\* {{}_form_{\\}}\\* _parser‑form_{)}
+
+   *Arguments and Values:*
 
    _parser_—a _parser_.
 
-   _restarts_—restart clauses for {restart-case}.
+   _case‑name_—a _symbol_ or {nil}.
+
+   _lambda‑list_—an _ordinary lambda list_.
+
+   _interactive‑expression_—a _symbol_ or a _lambda expression_.
+
+   _report‑expression_—a _string_, a _symbol_, or a _lambda expression_.
+
+   _test‑expression_—a _symbol or a _lambda expression_.
+
+   _declaration_—a {declare} _expression_; not evaluated.
+
+   _form_—a _form_.
+
+   _parser‑form_—a _form_ that evaluates to a _parser_.
 
    *Description:*
 
-   {%restart-case} establishes _restarts_ as if by {restart-case} before
-   applying _parser_ to the input. _Restarts_ must return _parsers_. If
-   _parser_ signals an _error_ matched by a _restart_, the _parser_
-   returned by the _restart_ will be applied to the input."
+   {%restart‑case} executes _parser_ in a _dynamic environment_ where restarts
+   are active as if by {restart‑case}. If control is transferred to a
+   _restart‑clause_, _parser‑form_ is evaluated and the resulting _parser_ is
+   applied.
+
+   *Examples:*
+
+   #code#
+   (parse \"012x3\"
+          (%any (%restart-case
+                    (=transform
+                     (=element)
+                     (lambda (c)
+                       (if (digit-char-p c)
+                           c
+                           (error \"Not a digit: ~c\" c))))
+                  (skip-element ()
+                    :report \"Skip character.\"
+                    (?list (=element))))))
+   ▷ Error: Not a digit: x
+   ▷ To continue, type :CONTINUE followed by an option number:
+   ▷  1: Skip non-digit character.
+   ▷  2: Return to Lisp Toplevel.
+   ▷ Debug> :continue 1
+   ▷ Invoking restart: Skip character.
+   → (#\\0 #\\1 #\\2), T, T
+   #
+
+   *See Also:*
+
+   {restart‑case}."
   `(let ((,parser-sym ,parser))
      (lambda (,input-sym)
        (let ((*input-fail* ,input-sym))
