@@ -42,6 +42,5 @@
       (=list (%maybe (%and (?test ('member '(#\+ #\-))) (=element)))
              (=natural-number radix))
     (ecase sign
-    (case sign
       (#\- (- number))
       ((#\+ nil) number))))
