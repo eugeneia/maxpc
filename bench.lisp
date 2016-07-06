@@ -7,8 +7,9 @@
 (in-package :maxpc.bench)
 
 (defun bench-=destructure (iterations)
-  (let ((input (with-output-to-string (out)
-                 (loop repeat iterations do (write-string "ab" out))))
+  (let ((input (make-array (truncate (* 2 iterations))
+                           :element-type 'base-char
+                           :initial-element #\x))
         (parser (%any (?list (=destructure (_ _)
                                  (=list (=element) (=element)))))))
     (time (parse input parser))))
