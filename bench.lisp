@@ -2,7 +2,8 @@
 
 (defpackage maxpc.bench
   (:use :cl :maxpc)
-  (:export :bench-=destructure))
+  (:export :bench-=destructure
+           :bench-=destructure/bare))
 
 (in-package :maxpc.bench)
 
@@ -13,3 +14,10 @@
         (parser (%any (?list (=destructure (_ _)
                                  (=list (=element) (=element)))))))
     (time (parse input parser))))
+
+(defun bench-=destructure/bare (iterations)
+  (let* ((p (lambda (input) (values input t t)))
+         (dp (=destructure (_ _) (=list p p)))
+         (input (maxpc.input:make-input "")))
+    (time (loop for i from 1 to (/ iterations 2) do
+               (funcall dp input)))))
