@@ -47,8 +47,8 @@
    #code#
    (parse '(a b c) (?fail (format t \"Position: ~a~%\"
                                   (get-input-position))))
-    ▷ Position: 0
-    → NIL, NIL, NIL
+   ▷ Position: 0
+   → NIL, NIL, NIL
    #"
   `(lambda (*input-fail*) ,@forms nil))
 
@@ -89,9 +89,9 @@
 
    #code#
    (parse '(1 2 3) (=subseq (%any (?satisfies 'numberp))))
-    → (1 2 3), T, T
+   → (1 2 3), T, T
    (parse \"123\" (=subseq (%any (?satisfies 'digit-char-p))))
-    → \"123\" T, T
+   → \"123\" T, T
    #"
   (lambda (input)
     (let ((rest (funcall parser input)))
@@ -115,9 +115,9 @@
 
    #code#
    (parse '(a) (=list (=element) (?end)))
-    → (A NIL), T, T
+   → (A NIL), T, T
    (parse '(a b) (=list (=element) (?end)))
-    → NIL, NIL, NIL
+   → NIL, NIL, NIL
    #"
   (lambda (input)
     (loop for parser in parsers
@@ -142,9 +142,9 @@
 
    #code#
    (parse '(a) (?list (=element) (?end)))
-    → NIL, T, T
+   → NIL, T, T
    (parse '(a b) (?list (=element) (?end)))
-    → NIL, NIL, NIL
+   → NIL, NIL, NIL
    #"
   (lambda (input)
     (loop for parser in parsers
