@@ -12,12 +12,12 @@
 
 (defvar *input-fail*)
 
-(defun parse (input parser)
+(defun parse (input-source parser)
   "→ _result_, _match‑p_, _end‑p_
 
    *Arguments and Values:*
 
-   _input_—a _sequence_ or _stream_.
+   _input-source_—an _input source_.
 
    _parser_—a parser.
 
@@ -27,10 +27,21 @@
 
    *Description:*
 
-   {parse} applies _parser_ to _input_ and returns its _result value_ or {nil}.
-   _Match‑p_ is _true_ if _parser_ _matched_ the _input_. _End‑p_ is _true_ if
-   _parser_ _matched_ the complete _input_."
-  (let ((*input-start* (make-input input)))
+   {parse} applies _parser_ to the _input_ and returns the parser’s _result
+   value_ or {nil}. _Match‑p_ is _true_ if _parser_ _matched_ the
+   _input-source_. _End‑p_ is _true_ if _parser_ _matched_ the complete
+   _input-source_. _Input_ is derived from _input-source_ by using
+   {maxpc.input:make-input}.
+
+   *Notes:*
+
+   {parse} accepts _input sources_ of _type_ {sequence} and {stream} out of the
+   box.
+
+   *See Also:*
+
+   [input](#section-4)"
+  (let ((*input-start* (make-input input-source)))
     (multiple-value-bind (rest value) (funcall parser *input-start*)
       (values value
               (not (null rest))
@@ -70,8 +81,9 @@
 
    *Exceptional Situations:*
 
-   {get‑input‑position} signals an _error_ of _type_ {simple‑error} unless
-   called within {?fail}, {%handler‑case} or {%restart‑case}."
+   If {get‑input‑position} is not evaluated within the dynamic context of
+   {?fail}, {%handler‑case} or {%restart‑case} an _error_ of _type_
+   {simple‑error} is signaled."
   (unless *input-fail*
     (error "GET-INPUT-POSITION may only be called inside =FAIL,
 =HANDLER-CASE and =RESTART-CASE."))

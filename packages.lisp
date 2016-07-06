@@ -1,3 +1,28 @@
+(defpackage maxpc.input
+  (:documentation
+   "The generic _input_ interface allows extensions to parse other _types_ of
+    _input sources_. To add a new _input source type_, {make-input} has to be
+    specialized on that _type_. The following methods have to be defined for
+    _inputs_:
+
+    + {input-empty-p}
+    + {input-first}
+    + {input-rest}
+
+    The following methods can optionally defined for _inputs_:
+
+    + {input-position}
+    + {input-element-type}
+    + {input-sequence}")
+  (:use :cl)
+  (:export :make-input
+           :input-position
+           :input-element-type
+           :input-empty-p
+           :input-first
+           :input-rest
+           :input-sequence))
+
 (defpackage maxpc
   (:documentation
    "_Max’s Parser Combinators_¹ is a simple and pragmatic library for writing
@@ -17,16 +42,25 @@
     + 2. Note that when parsing _streams_, the whole _stream_ will be read
          into an array before parsing is started in order to satisfy MaxPC’s
          backtracking requirements.
-    + 3. Tests have shown that the cost of Packrat parsing diminishes the gain
-         in execution time for typical grammars and workloads.
+    + 3. Unbacked claim: the book keeping costs of Packrat parsing diminish the
+         gain in execution time for typical grammars and workloads.
 
     < Basic Concepts
 
-     MaxPC parsers are composed by combining simpler parsers using either
-     built-in or user defined combinators. A parser can either succeed or fail
-     when applied to an input at a given position. A succeeding parser is said
-     to _match_. When a parser matches it can optionally produce a
-     _result value_, which may be processed by its parent parsers.
+     MaxPC _parsers_ are _functions_ that accept an [input](#section-4) as
+     their only argument and return three values: the remaining _input_ or
+     {nil}, a _result value_ or {nil}, and a _generalized boolean_ that
+     indicates if a _result value_ is present. The _type_ of a parser is:
+
+     {(function (}_input_{) (or} _input_ {null) * boolean)}
+
+     A parser can either succeed or fail when applied to an input at a given
+     position. A succeeding parser is said to _match_. When a parser matches it
+     can optionally produce a _result value_, which may be processed by its
+     parent parsers. New parsers can be created by composing existing parsers
+     using built-in or user defined _parser combinators_. A parser combinator
+     is a higher-order _function_ that includes one or more parsers as its
+     arguments and returns a parser.
 
      By convention, all parsers are defined as higher-order _functions_ that
      return the respective parser, even if they are nullary. For instance, the
@@ -171,7 +205,7 @@
      #
 
     >")
-  (:use :cl)
+  (:use :cl :maxpc.input)
   (:export :parse
            :get-input-position
            :%handler-case
