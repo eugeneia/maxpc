@@ -18,10 +18,10 @@
 ;;; Utility rules.
 
 (defun ?alphanumeric ()
-  (?test (=element) 'alphanumericp))
+  (?satisfies 'alphanumericp))
 
 (defun ?string-char ()
-  (%or (?test (=element) 'not-doublequote)
+  (%or (?satisfies 'not-doublequote)
        (?list (?eq #\\) (?eq #\"))))
 
 ;;; Here we go: an S-expression is either a list or an atom, with possibly
@@ -40,8 +40,8 @@
   ;; NOT-INTEGER is not strictly needed because ATOM considers INTEGER before a
   ;; STRING, we know can accept all sequences of alphanumerics -- we already
   ;; know it isn't an integer.
-  (=transform (=subseq (?test (=subseq (%some (?alphanumeric)))
-                              'not-integer))
+  (=transform (=subseq (?satisfies 'not-integer
+                                   (=subseq (%some (?alphanumeric)))))
               'intern))
 
 (defun =sexp ()
