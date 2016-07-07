@@ -29,20 +29,17 @@
     parsers and lexers based on combinatory parsing. MaxPC is capable of
     parsing deterministic, context-free languages, provides powerful tools for
     parse tree transformation and error handling, and can operate on _arrays_,
-    _lists_ and _streams_². It supports unlimited backtracking, but does not
+    _lists_ and _streams_. It supports unlimited backtracking, but does not
     implement [Packrat Parsing](http://pdos.csail.mit.edu/~baford/packrat/thesis/).
     Instead, MaxPC achieves good performance through its optimized primitives,
     and explicit separation of matching and capturing input. In practice, MaxPC
     parsers execute faster and require less total memory—when compared to
-    Packrat parsers—at the expense of not producing linear-time parsers.³
+    Packrat parsers—at the expense of not producing linear-time parsers.²
 
     + 1. MaxPC is a complete rewrite of [MPC](https://github.com/eugeneia/mpc)
          with was in turn a fork of Drew Crampsie’s
          [Smug](http://smug.drewc.ca/).
-    + 2. Note that when parsing _streams_, the whole _stream_ will be read
-         into an array before parsing is started in order to satisfy MaxPC’s
-         backtracking requirements.
-    + 3. Unbacked claim: the book keeping costs of Packrat parsing diminish the
+    + 2. Unbacked claim: the book keeping costs of Packrat parsing diminish the
          gain in execution time for typical grammars and workloads.
 
     < Basic Concepts
