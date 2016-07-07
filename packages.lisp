@@ -15,8 +15,7 @@
     + {input-element-type}
     + {input-sequence}")
   (:use :cl)
-  (:export :make-input
-           :input-position
+  (:export :input-position
            :input-element-type
            :input-empty-p
            :input-first

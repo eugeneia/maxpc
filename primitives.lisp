@@ -14,7 +14,7 @@
    (parse '(a) (?end)) → NIL, NIL, NIL
    #"
   (lambda (input)
-    (when (input-empty-p input)
+    (when (input-empty-p *input* (the fixnum input))
       input)))
 
 (defun =element ()
@@ -30,8 +30,8 @@
    (parse '() (=element)) → NIL, NIL, T
    #"
   (lambda (input)
-    (unless (input-empty-p input)
-      (values (input-rest input) (input-first input) t))))
+    (unless (input-empty-p *input* (the fixnum input))
+      (values (1+ (the fixnum input)) (input-first *input* (the fixnum input)) t))))
 
 (defmacro ?fail (&body forms)
   "*Arguments and Values:*
@@ -96,9 +96,10 @@
   (lambda (input)
     (let ((rest (funcall parser input)))
       (when rest
-        (values rest
-                (input-sequence
-                 input (- (input-position rest) (input-position input)))
+        (values (the fixnum rest)
+                (input-sequence *input*
+                                (the fixnum input)
+                                (- (the fixnum rest) (the fixnum input)))
                 t)))))
 
 (defun =list (&rest parsers)

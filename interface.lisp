@@ -8,7 +8,7 @@
 ;;; value is the parser’s “result value” or NIL and the third return value is a
 ;;; boolean that indicates if a result value is present.
 
-(defvar *input-start*)
+(defvar *input*)
 
 (defvar *input-fail*)
 
@@ -41,12 +41,12 @@
    *See Also:*
 
    [input](#section-4)"
-  (let ((*input-start* (make-input input-source)))
-    (multiple-value-bind (rest value) (funcall parser *input-start*)
+  (let ((*input* input-source))
+    (multiple-value-bind (rest value) (funcall parser 0)
       (values value
               (not (null rest))
-              (or (input-empty-p *input-start*)
-                  (and rest (input-empty-p rest)))))))
+              (or (input-empty-p *input* 0)
+                  (and rest (input-empty-p *input* rest)))))))
 
 (defun parse-line-position (input position)
   "Parses line position of POSITION in INPUT."
