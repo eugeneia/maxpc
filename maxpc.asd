@@ -9,6 +9,14 @@
   :components ((:file "packages")
                (:file "input"
                       :depends-on ("packages"))
+               (:file "input/index"
+                      :depends-on ("packages" "input"))
+               (:file "input/list"
+                      :depends-on ("packages" "input" "input/index"))
+               (:file "input/array"
+                      :depends-on ("packages" "input" "input/index"))
+               (:file "input/stream"
+                      :depends-on ("packages" "input" "input/index"))
                (:file "interface"
                       :depends-on ("packages" "input"))
                (:file "primitives"

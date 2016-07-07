@@ -245,3 +245,19 @@
   (:export :?digit
            :=natural-number
            :=integer-number))
+
+(defpackage maxpc.input.index
+  (:use :cl :maxpc.input)
+  (:export :index
+           :position
+           :index-position))
+
+(defpackage maxpc.input.list
+  (:use :cl :maxpc.input :maxpc.input.index))
+
+(defpackage maxpc.input.array
+  (:use :cl :maxpc.input :maxpc.input.index))
+
+(defpackage maxpc.input.stream
+  (:use :cl :maxpc.input :maxpc.input.index)
+  (:export :*chunk-size*))
