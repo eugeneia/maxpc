@@ -37,9 +37,7 @@
 
 (defmethod input-rest  ((input index-stream))
   (declare (optimize (speed 3) (debug 0) (safety 0)))
-  (let ((position (index-position input))
-        (buffer (index-stream-buffer input))
-        (stream (index-stream-stream input)))
+  (with-slots (position buffer stream) input
     (unless (or (< (the position position)
                    (1- (the position (length (the array buffer)))))
                 (eofp stream))
@@ -53,9 +51,7 @@
 
 (defmethod input-sequence ((input index-stream) (length fixnum))
   (declare (optimize (speed 3) (debug 0) (safety 0)))
-  (let ((position (index-position input))
-        (buffer (index-stream-buffer input))
-        (stream (index-stream-stream input)))
+  (with-slots (position buffer stream) input
     (loop while (and (< (the position (length buffer))
                         (+ (the position position) length))
                      (not (eofp stream))) do
