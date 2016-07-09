@@ -48,7 +48,9 @@
 
 (defmethod input-rest  ((input index-stream))
   (declare (optimize (speed 3) (debug 0) (safety 0)))
-  (with-slots (position buffer stream) input
+  (let ((position (index-position input))
+        (buffer (index-stream-buffer input))
+        (stream (index-stream-stream input)))
     (let ((next-position (1+ (the position position))))
       (unless (< (the position next-position)
                  (the position (length (the array buffer))))
@@ -62,7 +64,9 @@
 
 (defmethod input-sequence ((input index-stream) (length fixnum))
   (declare (optimize (speed 3) (debug 0) (safety 0)))
-  (with-slots (position buffer stream) input
+  (let ((position (index-position input))
+        (buffer (index-stream-buffer input))
+        (stream (index-stream-stream input)))
     (make-array length
                 :element-type (stream-element-type (the stream stream))
                 :displaced-to (the array buffer)
