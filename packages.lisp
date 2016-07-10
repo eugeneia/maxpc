@@ -28,8 +28,8 @@
    "_Max’s Parser Combinators_¹ is a simple and pragmatic library for writing
     parsers and lexers based on combinatory parsing. MaxPC is capable of
     parsing deterministic, context-free languages, provides powerful tools for
-    parse tree transformation and error handling, and can operate on _arrays_,
-    _lists_ and _streams_. It supports unlimited backtracking, but does not
+    parse tree transformation and error handling, and can operate on
+    _sequences_ and _streams_. It supports unlimited backtracking, but does not
     implement [Packrat Parsing](http://pdos.csail.mit.edu/~baford/packrat/thesis/).
     Instead, MaxPC achieves good performance through its optimized primitives,
     and explicit separation of matching and capturing input. In practice, MaxPC

@@ -38,6 +38,10 @@
    {parse} accepts _input sources_ of _type_ {sequence} and {stream} out of the
    box.
 
+   The special variable {maxpc.input.stream:*chunk-size*} controls the size by
+   which the buffer used for _stream inputs_ grows, and the number of elements
+   read at a time when parsing from _streams_ of _type_ {file-stream}.
+
    *See Also:*
 
    [input](#section-4)"
