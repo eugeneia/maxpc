@@ -2,9 +2,9 @@
 
 (defstruct (index-stream (:include index))
   (stream (error "Must supply STREAM.") :type stream :read-only t)
-  (buffer (error "Must supply ARRAY.") :type array :read-only t))
+  (buffer (error "Must supply BUFFER.") :type array  :read-only t))
 
-(defparameter *chunk-size* (* 5 1000 1000)) ; 5 Mega
+(defparameter *chunk-size* (* 1000 1000)) ; 1 Mega
 
 (defgeneric fill-buffer (buffer stream))
 
