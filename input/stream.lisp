@@ -6,13 +6,20 @@
 
 (defparameter *chunk-size* (* 1000 1000)) ; 1 Mega
 
+(defparameter *bound* nil)
+
+(defparameter *element-type* nil)
+
+(defun element-type (stream)
+  (or *element-type* (stream-element-type (the stream stream))))
+
 (defgeneric fill-buffer (buffer stream))
 
 (defmethod fill-buffer ((buffer array) (stream stream))
   (handler-case (vector-push-extend
-                 (ecase (stream-element-type stream)
+                 (case (element-type stream)
                    (character (read-char stream))
-                   (signed-byte (read-byte stream)))
+                   (otherwise (read-byte stream)))
                  buffer
                  (the fixnum *chunk-size*))
     (end-of-file (error) (declare (ignore error)))))
@@ -30,7 +37,7 @@
 
 (defmethod make-input ((input-source stream))
   (let ((buffer (make-array 0
-                            :element-type (stream-element-type input-source)
+                            :element-type (element-type input-source)
                             :adjustable t
                             :fill-pointer t)))
     (fill-buffer buffer input-source)
@@ -39,7 +46,10 @@
 (defmethod input-empty-p ((input index-stream))
   (declare (optimize (speed 3) (debug 0) (safety 0)))
   (= (the position (index-position input))
-     (the position (length (the array (index-stream-buffer input))))))
+     (the position (if *bound*
+                       (min #1=(length (the array (index-stream-buffer input)))
+                            (the position *bound*))
+                       #1#))))
 
 (defmethod input-first  ((input index-stream))
   (declare (optimize (speed 3) (debug 0) (safety 0)))
@@ -60,7 +70,7 @@
                          :position (the position next-position)))))
 
 (defmethod input-element-type ((input index-stream))
-  (stream-element-type (the stream (index-stream-stream input))))
+  (element-type (the stream (index-stream-stream input))))
 
 (defmethod input-sequence ((input index-stream) (length fixnum))
   (declare (optimize (speed 3) (debug 0) (safety 0)))
@@ -68,6 +78,6 @@
         (buffer (index-stream-buffer input))
         (stream (index-stream-stream input)))
     (make-array length
-                :element-type (stream-element-type (the stream stream))
+                :element-type (element-type (the stream stream))
                 :displaced-to (the array buffer)
                 :displaced-index-offset (the position position))))

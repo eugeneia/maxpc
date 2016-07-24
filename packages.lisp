@@ -260,4 +260,6 @@
 
 (defpackage maxpc.input.stream
   (:use :cl :maxpc.input :maxpc.input.index)
-  (:export :*chunk-size*))
+  (:export :*chunk-size*
+           :*bound*
+           :*element-type*))
