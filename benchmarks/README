@@ -1,0 +1,2 @@
+The results (*.dat) were produced on a Intel Xeon CPU E31245 @ 3.30GHz using
+esrap-20160531-git (Quicklisp), mpc-20160208-git (Quicklisp), and CCL 1.11.
