@@ -52,11 +52,12 @@
   "Parses line position of POSITION in INPUT."
   (loop for i from 0 to position
      for in = input then (input-rest in)
-     for newline-p = (unless (input-empty-p in)
+     for end-p = (input-empty-p in)
+     for newline-p = (unless end-p
                        (char= #\Newline (input-first in)))
      for character = 0 then (if newline-p 0 (1+ character))
      for line = 1 then (+ line (if newline-p 1 0))
-     when (= i position) return (values line character)))
+     when (or (= i position) end-p) return (values line character)))
 
 (defun get-input-position ()
   "→ _position_
