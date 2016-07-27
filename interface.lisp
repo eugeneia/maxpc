@@ -86,17 +86,17 @@
    {?fail}, {%handler‑case} or {%restart‑case} an _error_ of _type_
    {simple‑error} is signaled."
   (unless *input-fail*
-    (error "GET-INPUT-POSITION may only be called inside =FAIL,
-=HANDLER-CASE and =RESTART-CASE."))
+    (error "GET-INPUT-POSITION may only be called inside ?FAIL, %HANDLER-CASE
+and %RESTART-CASE."))
   (let ((position (input-position *input-fail*)))
     (if (eq (input-element-type *input-fail*) 'character)
 	(multiple-value-bind (line character)
-	    (parse-line-position *input-fail* position)
+	    (parse-line-position *input-start* position)
 	  (values position line character))
 	position)))
 
 (defun cases-to-parser-cases (cases input-sym)
-  "Utility macro function for =HANDLER-CASE and =RESTART-CASE."
+  "Utility macro function for %HANDLER-CASE and %RESTART-CASE."
   (loop for case in cases collect
        (destructuring-bind (typespec lambda-list &rest forms) case
          `(,typespec ,lambda-list

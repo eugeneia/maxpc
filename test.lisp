@@ -107,13 +107,15 @@
              (=destructure (_ b) (=list (?eq :c) (=element)))))
 
 (defun test-interface ()
-  (parse "foozakar"
+  (parse (format nil "fooza~%kar")
          (%or (?list (?string "foo")
-                     (%or (?string "bar")
-                          (?fail (assert (= 3 (get-input-position))))))
+                     (?fail (assert (= 3 (get-input-position)))))
               (?list (?string "fooza")
-                     (%or (?string "bar")
-                          (?fail (assert (= 5 (get-input-position))))))))
+                     (?fail (assert (= 5 (get-input-position)))))
+              (?list (?string (format nil "fooza~%k"))
+                     (?fail (assert (equal (multiple-value-list
+                                            (get-input-position))
+                                           '(7 2 2)))))))
   (passert "bar" (%handler-case (?fail (error "foo"))
                    (error () (?string "bar")))
            (null result))
