@@ -4,11 +4,25 @@
   (stream (error "Must supply STREAM.") :type stream :read-only t)
   (buffer (error "Must supply BUFFER.") :type array  :read-only t))
 
-(defparameter *chunk-size* (* 1000 1000)) ; 1 Mega
+(defparameter *chunk-size* (* 1000 1000) ; 1 Mega
+  "*Description:*
 
-(defparameter *bound* nil)
+   {*chunk-size*} controls the size by which the buffer used for _stream
+   inputs_ grows, and the number of elements read at a time when parsing from
+   _streams_ of _type_ {file-stream}.")
 
-(defparameter *element-type* nil)
+(defparameter *bound* nil
+  "*Description:*
+
+   {*bound*} can be set to limit the number of elements read from _stream
+   inputs_ in a single call to to {parse}.")
+
+(defparameter *element-type* nil
+  "*Description:*
+
+   {*element-type*} can be set to enforce a specific stream element type when
+   reading from _stream inputs_. This can be useful when dealing with bivalent
+   streams.")
 
 (defun element-type (stream)
   (or *element-type* (stream-element-type (the stream stream))))

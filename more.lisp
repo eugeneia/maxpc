@@ -73,6 +73,13 @@
    {?test} matches _parser_ if its result value _satisfies the test_ with
    _arguments_ as additional arguments to _test_.
 
+   *Examples:*
+
+   #code#
+   (parse '(a) (?test ('member '(a b)))) ⇒ NIL, T, T
+   (flet ((power-of-p (n e) (= (mod n e) 0)))
+     (parse '(42) (?test (#'power-of-p 2)))) ⇒ NIL, T, T
+   #
 
    *Notes:*
 
@@ -85,7 +92,11 @@
    *Exceptional Situations:*
 
    If _test_ accepts less arguments than the number of _arguments_ plus one an
-   _error_ of _type_ {program‑error} is signaled."
+   _error_ of _type_ {program‑error} is signaled.
+
+   *See also:*
+
+   {?satisfies}"
   `(?satisfies (lambda (,value-sym)
                  (funcall ,test ,value-sym ,@arguments))
                ,parser))
@@ -99,7 +110,18 @@
 
    *Description:*
 
-   {?eq} matches _parser_ if its result value is {eq} to _x_."
+   {?eq} matches _parser_ if its result value is {eq} to _x_.
+
+   *Examples:*
+
+   #code#
+   (parse '(a) (?eq 'a)) ⇒ NIL, T, T
+   (parse '(b) (?eq 'a)) ⇒ NIL, NIL, NIL
+   #
+
+   *See also:*
+
+   {?satisfies}"
   (?test ('eq x) parser))
 
 (defmacro =destructure ((&rest lambda-list) parser &body forms

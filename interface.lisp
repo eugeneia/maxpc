@@ -33,25 +33,12 @@
    _input-source_. _Input_ is derived from _input-source_ by using
    {maxpc.input:make-input}.
 
-   *Notes:*
-
    {parse} accepts _input sources_ of _type_ {sequence} and {stream} out of the
    box.
 
-   The special variable {maxpc.input.stream:*chunk-size*} controls the size by
-   which the buffer used for _stream inputs_ grows, and the number of elements
-   read at a time when parsing from _streams_ of _type_ {file-stream}.
-
-   The special variable {maxpc.input.stream:*bound*} can be set to limit the
-   number of elements read from _stream inputs_ in a single call to to {parse}.
-
-   The special variable {maxpc.input.stream:*element-type*} can be set to
-   enforce a specific stream element type when reading from _stream inputs_.
-   This can be useful when dealing with bivalent streams.
-
    *See Also:*
 
-   [input](#section-4)"
+   [input](#section-4), [maxpc.input.stream](#section-5)"
   (let ((*input-start* (make-input input-source)))
     (multiple-value-bind (rest value) (funcall parser *input-start*)
       (values value

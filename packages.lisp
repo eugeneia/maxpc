@@ -9,7 +9,7 @@
     + {input-first}
     + {input-rest}
 
-    The following methods can optionally defined for _inputs_:
+    The following methods can optionally be defined for _inputs_:
 
     + {input-position}
     + {input-element-type}
@@ -66,10 +66,12 @@
      A lexical convention is used to make three different types of parsers
      easily distinguishable:
 
-     + Parsers whose names start with {?} never produce a result value.
-     + Parsers whose names start with {=} always produce a result value.
-     + Parsers whose names start with {%} may produce a result value depending
-       on their arguments.
+     + Parsers whose names start with a question mark ({?}) never produce a
+       result value.
+     + Parsers whose names start with an equals sign ({=}) always produce a
+       result value.
+     + Parsers whose names start with a percent symbol ({%}) may produce a
+       result value depending on their arguments.
 
     >
 
@@ -259,6 +261,11 @@
   (:use :cl :maxpc.input :maxpc.input.index))
 
 (defpackage maxpc.input.stream
+  (:documentation
+   "Implements support for _input sources_ of _type_ {stream}. Input from
+   _streams_ is copied into a temporary buffer lazily as required by the
+   parser. _Streams_ of _type_ {file-stream} are read in as chunks of
+   customizable size.")
   (:use :cl :maxpc.input :maxpc.input.index)
   (:export :*chunk-size*
            :*bound*

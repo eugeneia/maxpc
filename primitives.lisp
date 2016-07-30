@@ -69,6 +69,11 @@
    #code#
    (parse '(1) (?satisfies 'numberp)) → NIL, T, T
    (parse '(a) (?satisfies 'numberp)) → NIL, NIL, NIL
+   (parse '(a b c)
+          (?satisfies (lambda (s)
+                        (intersection s '(b c d)))
+                      (%any (=element))))
+   ⇒ NIL, T, T
    #"
   (lambda (input)
     (multiple-value-bind (rest value) (funcall parser input)
