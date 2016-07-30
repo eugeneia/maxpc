@@ -33,7 +33,7 @@
     implement [Packrat Parsing](http://pdos.csail.mit.edu/~baford/packrat/thesis/).
     Instead, MaxPC achieves good performance through its optimized primitives,
     and explicit separation of matching and capturing input. In practice, MaxPC
-    parsers execute faster and require less total memory—when compared to
+    parsers perform better on typical computer languages—when compared to
     Packrat parsers—at the expense of not producing linear-time parsers.²
 
     + 1. MaxPC is a complete rewrite of [MPC](https://github.com/eugeneia/mpc)
