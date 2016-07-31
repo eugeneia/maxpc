@@ -167,7 +167,7 @@
      < Transformation
 
       + {=transform} produces the result of applying a _function_ to its
-        argument’s result value and its result value.
+        argument’s result value as its result value.
       + {=destructure} is a convenient destructuring _macro_ on top of
         {=transform}.
 
@@ -191,8 +191,8 @@
      instead call itself by _symbol_—calling its constructor would otherwise
      result in unbounded recursion. In order to do so the parser _function_
      needs to be _bound_ in the _function namespace_ using {setf}. The example
-     below implements a parser for recursively matching parentheses, and
-     illustrates how to avoid this common caveat.
+     below implements a parser for balanced parentheses, and illustrates how to
+     avoid this common caveat.
 
      #code#
      (defun ?parens ()

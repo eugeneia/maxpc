@@ -16,7 +16,9 @@
    *Examples:*
 
    #code#
+   (parse '(a) (%maybe (=element))) → A, T, T
    (parse '() (%maybe (=element))) → NIL, T, T
+   (parse '(42) (%maybe (?satisfies 'evenp))) → NIL, T, T
    #"
   (%or parser (?list)))
 
