@@ -50,7 +50,8 @@
 (defun =slist ()
   (=destructure (_ expressions _ _)
       (=list (?eq #\()
-             (%any (%skip-whitespace '=sexp/parser))
+             (%any (=destructure (_ expression)
+                       (=list (%any (?whitespace)) '=sexp/parser)))
              (%any (?whitespace))
              (?eq #\)))))
 

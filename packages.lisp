@@ -236,7 +236,6 @@
            :?string
            :*whitespace*
            :?whitespace
-           :%skip-whitespace
            :?newline
            :=line))
 

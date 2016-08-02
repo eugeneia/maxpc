@@ -62,25 +62,6 @@
    is signaled."
   (?test ('member *whitespace* :test 'char=)))
 
-(defun %skip-whitespace (parser)
-  "*Arguments and Values:*
-
-   _parser_—a _parser_.
-
-   *Description:*
-
-   {%skip‑whitespace} matches zero or more elements that are members of
-   {*whitespace*} and then matches _parser_. If _parser_ produces a result
-   value then {%skip‑whitespace} produces that value as its result value.
-
-   *Examples:*
-
-   #code#
-   (parse \"a\" (%skip-whitespace (?char #\\a))) → NIL, T, T
-   (parse \"   a\" (%skip-whitespace (?char #\\a))) → NIL, T, T
-   #"
-  (=destructure (_ result) (=list (%any (?whitespace)) parser)))
-
 (defun ?newline ()
   "*Description:*
 
