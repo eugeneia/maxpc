@@ -122,6 +122,8 @@
    → NIL, T, T
    (parse '(a b) (?seq (=element) (?end)))
    → NIL, NIL, NIL
+   (parse '(a) (?seq))
+   → NIL, T, NIL
    #"
   (lambda (input)
     (loop for parser in parsers
@@ -146,6 +148,8 @@
    → (A NIL), T, T
    (parse '(a b) (=list (=element) (?end)))
    → NIL, NIL, NIL
+   (parse '(a) (=list))
+   → NIL, T, NIL
    #"
   (lambda (input)
     (loop for parser in parsers

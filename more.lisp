@@ -149,18 +149,18 @@
    *Examples:*
 
    #code#
-   (parse \"a,\" (=destructure (x _)
-                     (=list (=element) (?eq #\\,))
-                   (char-upcase x)))
-   → #\\A, T, T
+   (parse '(10 % 3) (=destructure (x _ y)
+                        (=list (=element) (?eq '%) (=element))
+                      (mod x y)))
+   → 1, T, T
 
    (parse \"a,\" (=destructure (x _)
-                     (=list (=element) (?eq #\\,)))
+                   (=list (=element) (?eq #\\,))))
    → #\\a, T, T
 
-   (parse \"abc\" (=destructure (x &rest xs)
-                      (%any (=element)))
-   → '(#\\b #\\c), T, T
+   (parse '(a b c) (=destructure (x &rest xs)
+                       (%some (=element))))
+   → '(B C), T, T
    #
 
    *Exceptional Situations:*
