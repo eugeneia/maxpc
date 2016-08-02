@@ -11,8 +11,8 @@
   (let ((input (make-array (truncate (* 2 iterations))
                            :element-type 'base-char
                            :initial-element #\x))
-        (parser (%any (?list (=destructure (_ _)
-                                 (=list (=element) (=element)))))))
+        (parser (%any (?seq (=destructure (_ _)
+                                (=list (=element) (=element)))))))
     (time (parse input parser))))
 
 (defun bench-=destructure/bare (iterations)

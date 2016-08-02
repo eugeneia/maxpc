@@ -38,8 +38,8 @@
 
    If an element attempted to be matched is not a _character_ an _error_ of
    _type_ {type‑error} is signaled."
-  (apply '?list (loop for char across string collect
-                     (?char char case-sensitive-p))))
+  (apply '?seq (loop for char across string collect
+                    (?char char case-sensitive-p))))
 
 (defparameter *whitespace* '(#\Tab #\Newline #\Vt #\Ff #\Return #\Space)
   "*Value Type:*

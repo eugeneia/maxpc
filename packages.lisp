@@ -156,9 +156,9 @@
 
      < Sequence Combinators
 
-      + {?list} matches its arguments in sequence.
+      + {?seq} matches its arguments in sequence.
       + {=list} matches its arguments in sequence and produces a list of their
-        result as its result value.
+        results as its result value.
       + {%any} matches its argument repeatedly any number of times.
       + {%some} matches its argument repeatedly one or more times.
 
@@ -196,7 +196,7 @@
 
      #code#
      (defun ?parens ()
-       (?list (?eq #\\() (%maybe '?parens/parser) (?eq #\\)))))
+       (?seq (?eq #\\() (%maybe '?parens/parser) (?eq #\\)))))
 
      (setf (fdefinition '?parens/parser) (?parens))
 
@@ -217,8 +217,8 @@
            :?eq
            :?not
            :=subseq
+           :?seq
            :=list
-           :?list
            :%any
            :%some
            :%or

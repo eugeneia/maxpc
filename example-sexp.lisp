@@ -22,7 +22,7 @@
 
 (defun ?string-char ()
   (%or (?satisfies 'not-doublequote)
-       (?list (?eq #\\) (?eq #\"))))
+       (?seq (?eq #\\) (?eq #\"))))
 
 ;;; Here we go: an S-expression is either a list or an atom, with possibly
 ;;; leading whitespace.

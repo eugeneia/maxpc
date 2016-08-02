@@ -20,7 +20,7 @@
    (parse '() (%maybe (=element))) → NIL, T, T
    (parse '(42) (%maybe (?satisfies 'evenp))) → NIL, T, T
    #"
-  (%or parser (?list)))
+  (%or parser (?seq)))
 
 (defun ?not (parser)
   "*Arguments and Values:*
@@ -34,7 +34,7 @@
    *Examples:*
 
    #code#
-   (parse '(:foo :baz) (?not (?list (?eq :foo) (?eq :bar))))
+   (parse '(:foo :baz) (?not (?seq (?eq :foo) (?eq :bar))))
    → NIL, T, NIL
    (parse '() (?not (?eq :baz))
    → NIL, NIL, NIL

@@ -145,7 +145,7 @@ and %RESTART-CASE."))
                   (error (e)
                     (format t \"Error at position ~a: ~a~%\"
                             (get-input-position) e)
-                    (?list (=element))))))
+                    (?seq (=element))))))
    ▷ Error at position 2: Not a digit: x
    → (#\\0 #\\1 #\\2), T, T
    #
@@ -211,7 +211,7 @@ and %RESTART-CASE."))
                            (error \"Not a digit: ~c\" c))))
                   (skip-element ()
                     :report \"Skip character.\"
-                    (?list (=element))))))
+                    (?seq (=element))))))
    ▷ Error: Not a digit: x
    ▷ To continue, type :CONTINUE followed by an option number:
    ▷  1: Skip non-digit character.
