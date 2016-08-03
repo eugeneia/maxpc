@@ -250,7 +250,6 @@
 (defpackage maxpc.input.index
   (:use :cl :maxpc.input)
   (:export :index
-           :position
            :index-position))
 
 (defpackage maxpc.input.list

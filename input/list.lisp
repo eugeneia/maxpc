@@ -17,9 +17,11 @@
 
 (defmethod input-rest ((input index-list))
   (declare (optimize (speed 3) (debug 0)))
-  (make-index-list :list (cdr (the list (index-list-list input)))
-		   :position (1+ (the position (index-position input)))))
+  (let ((next-position (1+ (the index-position (index-position input)))))
+    (check-type next-position index-position)
+    (make-index-list :list (cdr (the list (index-list-list input)))
+                     :position (the index-position next-position))))
 
-(defmethod input-sequence ((input index-list) (length fixnum))
+(defmethod input-sequence ((input index-list) (length integer))
   (declare (optimize (speed 3) (debug 0) (safety 0)))
   (subseq (the list (index-list-list input)) 0 length))

@@ -109,11 +109,15 @@
 
 ;;; Generic implementation for optional methods
 
-(defmethod input-element-type ((input t)) t)
+(defmethod input-element-type (input)
+  (declare (ignore input))
+  t)
 
-(defmethod input-position ((input t)) 0)
+(defmethod input-position (input)
+  (declare (ignore input))
+  0)
 
-(defmethod input-sequence ((input t) (length fixnum))
+(defmethod input-sequence (input (length integer))
   (loop for i from 1 to length
         for input = input then (input-rest input)
      collect (input-first input)))

@@ -59,34 +59,34 @@
 
 (defmethod input-empty-p ((input index-stream))
   (declare (optimize (speed 3) (debug 0) (safety 0)))
-  (= (the position (index-position input))
-     (the position (if *bound*
+  (= (the index-position (index-position input))
+     (the index-position (if *bound*
                        (min #1=(length (the array (index-stream-buffer input)))
-                            (the position *bound*))
+                            (the index-position *bound*))
                        #1#))))
 
 (defmethod input-first  ((input index-stream))
   (declare (optimize (speed 3) (debug 0) (safety 0)))
   (aref (the array (index-stream-buffer input))
-        (the position (index-position input))))
+        (the index-position (index-position input))))
 
 (defmethod input-rest  ((input index-stream))
   (declare (optimize (speed 3) (debug 0) (safety 0)))
   (let ((position (index-position input))
         (buffer (index-stream-buffer input))
         (stream (index-stream-stream input)))
-    (let ((next-position (1+ (the position position))))
-      (unless (< (the position next-position)
-                 (the position (length (the array buffer))))
+    (let ((next-position (1+ (the index-position position))))
+      (unless (< (the index-position next-position)
+                 (the index-position (length (the array buffer))))
         (fill-buffer buffer stream))
       (make-index-stream :stream (the stream stream)
                          :buffer (the array buffer)
-                         :position (the position next-position)))))
+                         :position (the index-position next-position)))))
 
 (defmethod input-element-type ((input index-stream))
   (element-type (the stream (index-stream-stream input))))
 
-(defmethod input-sequence ((input index-stream) (length fixnum))
+(defmethod input-sequence ((input index-stream) (length integer))
   (declare (optimize (speed 3) (debug 0) (safety 0)))
   (let ((position (index-position input))
         (buffer (index-stream-buffer input))
@@ -94,4 +94,4 @@
     (make-array length
                 :element-type (element-type (the stream stream))
                 :displaced-to (the array buffer)
-                :displaced-index-offset (the position position))))
+                :displaced-index-offset (the index-position position))))
