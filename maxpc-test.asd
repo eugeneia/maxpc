@@ -8,4 +8,5 @@
   :components ((:file "test")
                (:file "bench")
                (:file "example-sexp"))
-  :depends-on ("maxpc"))
+  :depends-on ("maxpc")
+  :perform (test-op (o s) (maxpc.test:run-tests)))
