@@ -138,11 +138,10 @@
       + {?end} matches only when there is no further input.
       + {=element} unconditionally matches the next element of the input
         _sequence_.
-      + {?satisifies}, {?test}, and {?eq} match input conditionally.
-      + {?not} negates its argument.
-      + {%maybe} matches, even if its argument fails to match.
       + {=subseq} produces the subsequence matched by its argument as its
         result value.
+      + {?satisifies}, {?test}, and {?eq} match input conditionally.
+      + {%maybe} matches, even if its argument fails to match.
 
      >
 
@@ -151,6 +150,7 @@
       + {%or} forms the union of its arguments.
       + {%and} forms the intersection of its arguments.
       + {%diff} forms the difference of its arguments.
+      + {?not} negates its argument.
 
      >
 
