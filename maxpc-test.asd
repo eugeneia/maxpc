@@ -9,4 +9,4 @@
                (:file "bench")
                (:file "example-sexp"))
   :depends-on ("maxpc")
-  :perform (test-op (o s) (maxpc.test:run-tests)))
+  :perform (test-op (o s) (uiop:symbol-call :maxpc.test :run-tests)))
