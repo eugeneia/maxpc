@@ -16,9 +16,11 @@
    *Examples:*
 
    #code#
+   (parse '(a) (%maybe (=element))) → A, T, T
    (parse '() (%maybe (=element))) → NIL, T, T
+   (parse '(42) (%maybe (?satisfies 'evenp))) → NIL, T, T
    #"
-  (%or parser (?list)))
+  (%or parser (?seq)))
 
 (defun ?not (parser)
   "*Arguments and Values:*
@@ -32,7 +34,7 @@
    *Examples:*
 
    #code#
-   (parse '(:foo :baz) (?not (?list (?eq :foo) (?eq :bar))))
+   (parse '(:foo :baz) (?not (?seq (?eq :foo) (?eq :bar))))
    → NIL, T, NIL
    (parse '() (?not (?eq :baz))
    → NIL, NIL, NIL
@@ -73,6 +75,13 @@
    {?test} matches _parser_ if its result value _satisfies the test_ with
    _arguments_ as additional arguments to _test_.
 
+   *Examples:*
+
+   #code#
+   (parse '(a) (?test ('member '(a b)))) ⇒ NIL, T, T
+   (flet ((power-of-p (n e) (= (mod n e) 0)))
+     (parse '(42) (?test (#'power-of-p 2)))) ⇒ NIL, T, T
+   #
 
    *Notes:*
 
@@ -85,7 +94,11 @@
    *Exceptional Situations:*
 
    If _test_ accepts less arguments than the number of _arguments_ plus one an
-   _error_ of _type_ {program‑error} is signaled."
+   _error_ of _type_ {program‑error} is signaled.
+
+   *See also:*
+
+   {?satisfies}"
   `(?satisfies (lambda (,value-sym)
                  (funcall ,test ,value-sym ,@arguments))
                ,parser))
@@ -99,7 +112,18 @@
 
    *Description:*
 
-   {?eq} matches _parser_ if its result value is {eq} to _x_."
+   {?eq} matches _parser_ if its result value is {eq} to _x_.
+
+   *Examples:*
+
+   #code#
+   (parse '(a) (?eq 'a)) ⇒ NIL, T, T
+   (parse '(b) (?eq 'a)) ⇒ NIL, NIL, NIL
+   #
+
+   *See also:*
+
+   {?satisfies}"
   (?test ('eq x) parser))
 
 (defmacro =destructure ((&rest lambda-list) parser &body forms
@@ -125,18 +149,18 @@
    *Examples:*
 
    #code#
-   (parse \"a,\" (=destructure (x _)
-                     (=list (=element) (?eq #\\,))
-                   (char-upcase x)))
-   → #\\A, T, T
+   (parse '(10 % 3) (=destructure (x _ y)
+                        (=list (=element) (?eq '%) (=element))
+                      (mod x y)))
+   → 1, T, T
 
    (parse \"a,\" (=destructure (x _)
-                     (=list (=element) (?eq #\\,)))
+                   (=list (=element) (?eq #\\,))))
    → #\\a, T, T
 
-   (parse \"abc\" (=destructure (x &rest xs)
-                      (%any (=element)))
-   → '(#\\b #\\c), T, T
+   (parse '(a b c) (=destructure (x &rest xs)
+                       (%some (=element))))
+   → '(B C), T, T
    #
 
    *Exceptional Situations:*

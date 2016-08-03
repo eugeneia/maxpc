@@ -38,8 +38,8 @@
 
    If an element attempted to be matched is not a _character_ an _error_ of
    _type_ {type‑error} is signaled."
-  (apply '?list (loop for char across string collect
-                     (?char char case-sensitive-p))))
+  (apply '?seq (loop for char across string collect
+                    (?char char case-sensitive-p))))
 
 (defparameter *whitespace* '(#\Tab #\Newline #\Vt #\Ff #\Return #\Space)
   "*Value Type:*
@@ -61,25 +61,6 @@
    If the next element is not a _character_ an _error_ of _type_ {type‑error}
    is signaled."
   (?test ('member *whitespace* :test 'char=)))
-
-(defun %skip-whitespace (parser)
-  "*Arguments and Values:*
-
-   _parser_—a _parser_.
-
-   *Description:*
-
-   {%skip‑whitespace} matches zero or more elements that are members of
-   {*whitespace*} and then matches _parser_. If _parser_ produces a result
-   value then {%skip‑whitespace} produces that value as its result value.
-
-   *Examples:*
-
-   #code#
-   (parse \"a\" (%skip-whitespace (?char #\\a))) → NIL, T, T
-   (parse \"   a\" (%skip-whitespace (?char #\\a))) → NIL, T, T
-   #"
-  (=destructure (_ result) (=list (%any (?whitespace)) parser)))
 
 (defun ?newline ()
   "*Description:*
