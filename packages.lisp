@@ -9,7 +9,7 @@
     + {input-first}
     + {input-rest}
 
-    The following methods can optionally defined for _inputs_:
+    The following methods can optionally be defined for _inputs_:
 
     + {input-position}
     + {input-element-type}
@@ -28,21 +28,18 @@
    "_Max’s Parser Combinators_¹ is a simple and pragmatic library for writing
     parsers and lexers based on combinatory parsing. MaxPC is capable of
     parsing deterministic, context-free languages, provides powerful tools for
-    parse tree transformation and error handling, and can operate on _arrays_,
-    _lists_ and _streams_². It supports unlimited backtracking, but does not
+    parse tree transformation and error handling, and can operate on
+    _sequences_ and _streams_. It supports unlimited backtracking, but does not
     implement [Packrat Parsing](http://pdos.csail.mit.edu/~baford/packrat/thesis/).
     Instead, MaxPC achieves good performance through its optimized primitives,
     and explicit separation of matching and capturing input. In practice, MaxPC
-    parsers execute faster and require less total memory—when compared to
-    Packrat parsers—at the expense of not producing linear-time parsers.³
+    parsers perform better on typical computer languages—when compared to
+    Packrat parsers—at the expense of not producing linear-time parsers.²
 
     + 1. MaxPC is a complete rewrite of [MPC](https://github.com/eugeneia/mpc)
          with was in turn a fork of Drew Crampsie’s
          [Smug](http://smug.drewc.ca/).
-    + 2. Note that when parsing _streams_, the whole _stream_ will be read
-         into an array before parsing is started in order to satisfy MaxPC’s
-         backtracking requirements.
-    + 3. Unbacked claim: the book keeping costs of Packrat parsing diminish the
+    + 2. Unbacked claim: the book keeping costs of Packrat parsing diminish the
          gain in execution time for typical grammars and workloads.
 
     < Basic Concepts
@@ -69,10 +66,12 @@
      A lexical convention is used to make three different types of parsers
      easily distinguishable:
 
-     + Parsers whose names start with {?} never produce a result value.
-     + Parsers whose names start with {=} always produce a result value.
-     + Parsers whose names start with {%} may produce a result value depending
-       on their arguments.
+     + Parsers whose names start with a question mark ({?}) never produce a
+       result value.
+     + Parsers whose names start with an equals sign ({=}) always produce a
+       result value.
+     + Parsers whose names start with a percent symbol ({%}) may produce a
+       result value depending on their arguments.
 
     >
 
@@ -139,11 +138,10 @@
       + {?end} matches only when there is no further input.
       + {=element} unconditionally matches the next element of the input
         _sequence_.
-      + {?satisifies}, {?test}, and {?eq} match input conditionally.
-      + {?not} negates its argument.
-      + {%maybe} matches, even if its argument fails to match.
       + {=subseq} produces the subsequence matched by its argument as its
         result value.
+      + {?satisifies}, {?test}, and {?eq} match input conditionally.
+      + {%maybe} matches, even if its argument fails to match.
 
      >
 
@@ -152,14 +150,15 @@
       + {%or} forms the union of its arguments.
       + {%and} forms the intersection of its arguments.
       + {%diff} forms the difference of its arguments.
+      + {?not} negates its argument.
 
      >
 
      < Sequence Combinators
 
-      + {?list} matches its arguments in sequence.
+      + {?seq} matches its arguments in sequence.
       + {=list} matches its arguments in sequence and produces a list of their
-        result as its result value.
+        results as its result value.
       + {%any} matches its argument repeatedly any number of times.
       + {%some} matches its argument repeatedly one or more times.
 
@@ -168,7 +167,7 @@
      < Transformation
 
       + {=transform} produces the result of applying a _function_ to its
-        argument’s result value and its result value.
+        argument’s result value as its result value.
       + {=destructure} is a convenient destructuring _macro_ on top of
         {=transform}.
 
@@ -192,12 +191,12 @@
      instead call itself by _symbol_—calling its constructor would otherwise
      result in unbounded recursion. In order to do so the parser _function_
      needs to be _bound_ in the _function namespace_ using {setf}. The example
-     below implements a parser for recursively matching parentheses, and
-     illustrates how to avoid this common caveat.
+     below implements a parser for balanced parentheses, and illustrates how to
+     avoid this common caveat.
 
      #code#
      (defun ?parens ()
-       (?list (?eq #\\() (%maybe '?parens/parser) (?eq #\\)))))
+       (?seq (?eq #\\() (%maybe '?parens/parser) (?eq #\\)))))
 
      (setf (fdefinition '?parens/parser) (?parens))
 
@@ -218,8 +217,8 @@
            :?eq
            :?not
            :=subseq
+           :?seq
            :=list
-           :?list
            :%any
            :%some
            :%or
@@ -237,7 +236,6 @@
            :?string
            :*whitespace*
            :?whitespace
-           :%skip-whitespace
            :?newline
            :=line))
 
@@ -248,3 +246,25 @@
   (:export :?digit
            :=natural-number
            :=integer-number))
+
+(defpackage maxpc.input.index
+  (:use :cl :maxpc.input)
+  (:export :index
+           :index-position))
+
+(defpackage maxpc.input.list
+  (:use :cl :maxpc.input :maxpc.input.index))
+
+(defpackage maxpc.input.array
+  (:use :cl :maxpc.input :maxpc.input.index))
+
+(defpackage maxpc.input.stream
+  (:documentation
+   "Implements support for _input sources_ of _type_ {stream}. Input from
+   _streams_ is copied into a temporary buffer lazily as required by the
+   parser. _Streams_ of _type_ {file-stream} are read in as chunks of
+   customizable size.")
+  (:use :cl :maxpc.input :maxpc.input.index)
+  (:export :*chunk-size*
+           :*bound*
+           :*element-type*))

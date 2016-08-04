@@ -69,6 +69,11 @@
    #code#
    (parse '(1) (?satisfies 'numberp)) → NIL, T, T
    (parse '(a) (?satisfies 'numberp)) → NIL, NIL, NIL
+   (parse '(a b c)
+          (?satisfies (lambda (s)
+                        (intersection s '(b c d)))
+                      (%any (=element))))
+   ⇒ NIL, T, T
    #"
   (lambda (input)
     (multiple-value-bind (rest value) (funcall parser input)
@@ -101,6 +106,31 @@
                  input (- (input-position rest) (input-position input)))
                 t)))))
 
+(defun ?seq (&rest parsers)
+  "*Arguments and Values:*
+
+   _parsers_—_parsers_.
+
+   *Description:*
+
+   {?seq} matches _parsers_ in sequence.
+
+   *Examples:*
+
+   #code#
+   (parse '(a) (?seq (=element) (?end)))
+   → NIL, T, T
+   (parse '(a b) (?seq (=element) (?end)))
+   → NIL, NIL, NIL
+   (parse '(a) (?seq))
+   → NIL, T, NIL
+   #"
+  (lambda (input)
+    (loop for parser in parsers
+         do (setf input (funcall parser input))
+         unless input return nil
+         finally (return input))))
+
 (defun =list (&rest parsers)
   "*Arguments and Values:*
 
@@ -118,6 +148,8 @@
    → (A NIL), T, T
    (parse '(a b) (=list (=element) (?end)))
    → NIL, NIL, NIL
+   (parse '(a) (=list))
+   → NIL, T, NIL
    #"
   (lambda (input)
     (loop for parser in parsers
@@ -128,29 +160,6 @@
            value)
        collect value into list
        finally (return (values input list t)))))
-
-(defun ?list (&rest parsers)
-  "*Arguments and Values:*
-
-   _parsers_—_parsers_.
-
-   *Description:*
-
-   {=list} matches _parsers_ in sequence.
-
-   *Examples:*
-
-   #code#
-   (parse '(a) (?list (=element) (?end)))
-   → NIL, T, T
-   (parse '(a b) (?list (=element) (?end)))
-   → NIL, NIL, NIL
-   #"
-  (lambda (input)
-    (loop for parser in parsers
-         do (setf input (funcall parser input))
-         unless input return nil
-         finally (return input))))
 
 (defun %any (parser)
   "*Arguments and Values:*

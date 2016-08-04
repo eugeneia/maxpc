@@ -9,8 +9,16 @@
   :components ((:file "packages")
                (:file "input"
                       :depends-on ("packages"))
-               (:file "interface"
+               (:file "input/index"
                       :depends-on ("packages" "input"))
+               (:file "input/list"
+                      :depends-on ("packages" "input" "input/index"))
+               (:file "input/array"
+                      :depends-on ("packages" "input" "input/index"))
+               (:file "input/stream"
+                      :depends-on ("packages" "input" "input/index"))
+               (:file "interface"
+                      :depends-on ("packages" "input" "input/stream"))
                (:file "primitives"
                       :depends-on ("packages" "input"))
                (:file "more"
@@ -18,4 +26,5 @@
                (:file "char"
                       :depends-on ("packages" "primitives" "more"))
                (:file "digit"
-                      :depends-on ("packages" "primitives" "more"))))
+                      :depends-on ("packages" "primitives" "more")))
+  :in-order-to ((test-op (test-op :maxpc-test))))

@@ -33,14 +33,12 @@
    _input-source_. _Input_ is derived from _input-source_ by using
    {maxpc.input:make-input}.
 
-   *Notes:*
-
    {parse} accepts _input sources_ of _type_ {sequence} and {stream} out of the
    box.
 
    *See Also:*
 
-   [input](#section-4)"
+   [input](#section-4), [maxpc.input.stream](#section-5)"
   (let ((*input-start* (make-input input-source)))
     (multiple-value-bind (rest value) (funcall parser *input-start*)
       (values value
@@ -52,11 +50,12 @@
   "Parses line position of POSITION in INPUT."
   (loop for i from 0 to position
      for in = input then (input-rest in)
-     for newline-p = (unless (input-empty-p in)
+     for end-p = (input-empty-p in)
+     for newline-p = (unless end-p
                        (char= #\Newline (input-first in)))
      for character = 0 then (if newline-p 0 (1+ character))
      for line = 1 then (+ line (if newline-p 1 0))
-     when (= i position) return (values line character)))
+     when (or (= i position) end-p) return (values line character)))
 
 (defun get-input-position ()
   "→ _position_
@@ -85,17 +84,17 @@
    {?fail}, {%handler‑case} or {%restart‑case} an _error_ of _type_
    {simple‑error} is signaled."
   (unless *input-fail*
-    (error "GET-INPUT-POSITION may only be called inside =FAIL,
-=HANDLER-CASE and =RESTART-CASE."))
+    (error "GET-INPUT-POSITION may only be called inside ?FAIL, %HANDLER-CASE
+and %RESTART-CASE."))
   (let ((position (input-position *input-fail*)))
     (if (eq (input-element-type *input-fail*) 'character)
 	(multiple-value-bind (line character)
-	    (parse-line-position *input-fail* position)
+	    (parse-line-position *input-start* position)
 	  (values position line character))
 	position)))
 
 (defun cases-to-parser-cases (cases input-sym)
-  "Utility macro function for =HANDLER-CASE and =RESTART-CASE."
+  "Utility macro function for %HANDLER-CASE and %RESTART-CASE."
   (loop for case in cases collect
        (destructuring-bind (typespec lambda-list &rest forms) case
          `(,typespec ,lambda-list
@@ -146,7 +145,7 @@
                   (error (e)
                     (format t \"Error at position ~a: ~a~%\"
                             (get-input-position) e)
-                    (?list (=element))))))
+                    (?seq (=element))))))
    ▷ Error at position 2: Not a digit: x
    → (#\\0 #\\1 #\\2), T, T
    #
@@ -212,7 +211,7 @@
                            (error \"Not a digit: ~c\" c))))
                   (skip-element ()
                     :report \"Skip character.\"
-                    (?list (=element))))))
+                    (?seq (=element))))))
    ▷ Error: Not a digit: x
    ▷ To continue, type :CONTINUE followed by an option number:
    ▷  1: Skip non-digit character.
