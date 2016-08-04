@@ -18,4 +18,5 @@
                (:file "char"
                       :depends-on ("packages" "primitives" "more"))
                (:file "digit"
-                      :depends-on ("packages" "primitives" "more"))))
+                      :depends-on ("packages" "primitives" "more")))
+  :in-order-to ((test-op (test-op :maxpc-test))))

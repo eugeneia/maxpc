@@ -1,5 +1,3 @@
-;;;; Input primitives.
-
 (in-package :maxpc.input)
 
 
@@ -74,45 +72,49 @@
     If the number of elements in _input_ are less than _length_ an _error_ of
     _type_ {error} may be signaled."))
 
+(deftype index-position ()
+  (upgraded-array-element-type
+   `(integer 0 ,array-dimension-limit)))
 
 ;;; Implemetation for arrays
 
-(defmethod input-empty-p ((input array) (position fixnum))
+(defmethod input-empty-p ((input array) (position integer))
   (declare (optimize (speed 3) (debug 0) (safety 0)))
-  (not (< position (length input))))
+  (not (< (the index-position position)
+          (the index-position (length input)))))
 
-(defmethod input-first ((input array) (position fixnum))
+(defmethod input-first ((input array) (position integer))
   (declare (optimize (speed 3) (debug 0) (safety 0)))
-  (aref input position))
+  (aref input (the index-position position)))
 
 (defmethod input-element-type ((input array))
   (declare (optimize (speed 3) (debug 0) (safety 0)))
   (array-element-type input))
 
-(defmethod input-sequence ((input array) (position fixnum) (length fixnum))
+(defmethod input-sequence ((input array) (position integer) (length integer))
   (declare (optimize (speed 3) (debug 0) (safety 0)))
-  (make-array length
+  (make-array (the index-position length)
               :element-type (input-element-type input)
               :displaced-to input
-              :displaced-index-offset position))
+              :displaced-index-offset (the index-position position)))
 
-(defmethod input-empty-p ((input simple-string) (position fixnum))
+(defmethod input-empty-p ((input simple-string) (position integer))
   (declare (optimize (speed 3) (debug 0) (safety 0)))
-  (not (< (the fixnum position)
-          (the fixnum (length (the simple-string input))))))
+  (not (< (the index-position position)
+          (the index-position (length (the simple-string input))))))
 
-(defmethod input-first ((input simple-string) (position fixnum))
+(defmethod input-first ((input simple-string) (position integer))
   (declare (optimize (speed 3) (debug 0) (safety 0)))
-  (aref (the simple-string input) (the fixnum position)))
+  (aref (the simple-string input) (the index-position position)))
 
 (defmethod input-element-type ((input simple-string))
   (declare (optimize (speed 3) (debug 0) (safety 0)))
   'character)
 
-(defmethod input-sequence ((input simple-array) (position fixnum) (length
-                                                                   fixnum))
+(defmethod input-sequence ((input simple-array)
+                           (position integer) (length integer))
   (declare (optimize (speed 3) (debug 0) (safety 0)))
-  (make-array (the fixnum length)
+  (make-array (the index-position length)
               :element-type 'character
               :displaced-to (the simple-string input)
-              :displaced-index-offset (the fixnum position)))
+              :displaced-index-offset (the index-position position)))
