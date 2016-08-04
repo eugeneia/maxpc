@@ -126,31 +126,6 @@
    {?satisfies}"
   (?test ('eq x) parser))
 
-(defun =list-form-p (form)
-  (and (listp form) (eq (first form) '=list)))
-
-;; This is a “primitive” strictly speaking.
-(defun special-case-=list (lambda-list ignorable-syms parsers body
-                           &aux (input-sym (gensym "input"))
-                                (rest-sym (gensym "rest"))
-                                (value-sym (gensym "value"))
-                                (df-sym (gensym "df")))
-  `(let ((,df-sym (lambda ,lambda-list
-                    (declare (ignore ,@ignorable-syms))
-                    ,@body)))
-     (lambda (,input-sym)
-       (block =destructure-=list
-         (let ((,value-sym
-                (funcall ,df-sym
-                         ,@(loop for parser in parsers collect
-                                `(multiple-value-bind (,rest-sym ,value-sym)
-                                     (funcall ,parser ,input-sym)
-                                   (unless ,rest-sym
-                                     (return-from =destructure-=list))
-                                   (setf ,input-sym ,rest-sym)
-                                   ,value-sym)))))
-         (values ,input-sym ,value-sym t))))))
-
 (defmacro =destructure ((&rest lambda-list) parser &body forms
                         &aux (result-sym (gensym "result")))
   "*Arguments and Values:*
@@ -205,10 +180,8 @@
                               ignorable-syms))
          (body (or forms (remove-if (lambda (x) (member x special-syms))
                                     lambda-list))))
-    (if (=list-form-p parser)
-        (special-case-=list lambda-list ignorable-syms (rest parser) body)
-        `(=transform ,parser
-                     (lambda (,result-sym)
-                       (destructuring-bind ,lambda-list ,result-sym
-                         (declare (ignore ,@ignorable-syms))
-                         ,@body))))))
+    `(=transform ,parser
+                 (lambda (,result-sym)
+                   (destructuring-bind ,lambda-list ,result-sym
+                     (declare (ignore ,@ignorable-syms))
+                     ,@body)))))
