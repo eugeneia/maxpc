@@ -204,7 +204,7 @@
      #
 
     >")
-  (:use :cl :maxpc.input)
+  (:use :cl :maxpc.input :snark-sparse-array)
   (:export :parse
            :get-input-position
            :%handler-case

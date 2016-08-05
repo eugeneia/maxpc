@@ -27,4 +27,5 @@
                       :depends-on ("packages" "primitives" "more"))
                (:file "digit"
                       :depends-on ("packages" "primitives" "more")))
+  :depends-on ("snark-sparse-array")
   :in-order-to ((test-op (test-op :maxpc-test))))

@@ -2,6 +2,20 @@
 
 (in-package :maxpc)
 
+(defvar *hit*)
+(defvar *miss*)
+
+(defmacro with-parser ((input-sym) &body forms
+                       &aux (cache-sym (gensym "cache")))
+  `(let ((,cache-sym (make-sparse-vector)))
+     (lambda (,input-sym)
+       (values-list
+        (or (let ((cached #1=(sparef ,cache-sym (input-position ,input-sym))))
+              (cond
+                (cached (incf *hit*)  cached)
+                (t      (incf *miss*) nil)))
+            (setf #1# (multiple-value-list (progn ,@forms))))))))
+
 (defun ?end  ()
   "*Description:*
 
@@ -125,7 +139,7 @@
    (parse '(a) (?seq))
    → NIL, T, NIL
    #"
-  (lambda (input)
+  (with-parser (input)
     (loop for parser in parsers
          do (setf input (funcall parser input))
          unless input return nil
@@ -151,7 +165,7 @@
    (parse '(a) (=list))
    → NIL, T, NIL
    #"
-  (lambda (input)
+  (with-parser (input)
     (loop for parser in parsers
        for value =
          (multiple-value-bind (rest value) (funcall parser input)
@@ -178,7 +192,7 @@
    (parse '(a b c) (%any (=element))) → (A B C), T, T
    (parse '() (%any (=element))) → NIL, T, T
    #"
-  (lambda (input)
+  (with-parser (input)
     (let (rest value present-p)
       (loop do (setf (values rest value present-p) (funcall parser input))
          if rest do (setf input rest)
@@ -213,7 +227,7 @@
    ▷ FOOBARBAZ
    → NIL, NIL, T
    #"
-  (lambda (input)
+  (with-parser (input)
     (loop for parser in parsers do
          (multiple-value-bind (rest value present-p) (funcall parser input)
            (when rest
@@ -252,7 +266,7 @@
    ▷ FOOBARBAZ
    → NIL, T, T
    #"
-  (lambda (input)
+  (with-parser (input)
     (let (rest value present-p)
       (loop for parser in parsers do
            (setf (values rest value present-p) (funcall parser input))
@@ -289,7 +303,7 @@
    → NIL, T, T
    #"
   (let ((punion (apply '%or not-parsers)))
-    (lambda (input)
+    (with-parser (input)
       (unless (funcall punion input)
         (funcall parser input)))))
 

@@ -39,8 +39,11 @@
    *See Also:*
 
    [input](#section-4), [maxpc.input.stream](#section-5)"
-  (let ((*input-start* (make-input input-source)))
+  (let ((*input-start* (make-input input-source))
+        (*hit* 0)
+        (*miss* 0))
     (multiple-value-bind (rest value) (funcall parser *input-start*)
+      (format *error-output* "Hit ~a / Miss ~a~%" *hit* *miss*)
       (values value
               (not (null rest))
               (or (input-empty-p *input-start*)
