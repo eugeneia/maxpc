@@ -13,7 +13,7 @@ unset ytics
 set ylabel "Time (s)"
 
 plot "$source" using 1:2 title "list" with linespoints lw 1.2 ps 1.8, \
-     "$source" using 1:3 title "array" with linespoints lw 1.2 ps 1.8, \
+     "$source" using 1:3 title "vector" with linespoints lw 1.2 ps 1.8, \
      "$source" using 1:4 title "stream" with linespoints lw 1.2 ps 1.8, \
      "$source" using 1:5 title "file-stream" with linespoints lw 1.2 ps 1.8
 EOF

@@ -2,7 +2,7 @@
 
 (defstruct (index-stream (:include index))
   (stream (error "Must supply STREAM.") :type stream :read-only t)
-  (buffer (error "Must supply BUFFER.") :type array  :read-only t))
+  (buffer (error "Must supply BUFFER.") :type vector :read-only t))
 
 (defparameter *chunk-size* (* 1000 1000) ; 1 Mega
   "*Description:*
@@ -29,7 +29,7 @@
 
 (defgeneric fill-buffer (buffer stream))
 
-(defmethod fill-buffer ((buffer array) (stream stream))
+(defmethod fill-buffer ((buffer vector) (stream stream))
   (handler-case (vector-push-extend
                  (case (element-type stream)
                    (character (read-char stream))
@@ -38,7 +38,7 @@
                  (the fixnum *chunk-size*))
     (end-of-file (error) (declare (ignore error)))))
 
-(defmethod fill-buffer ((buffer array) (stream file-stream))
+(defmethod fill-buffer ((buffer vector) (stream file-stream))
   (let* ((file-length (file-length stream))
          (old-buffer-size (length buffer))
          (new-buffer-size (min (+ old-buffer-size *chunk-size*) file-length)))
@@ -60,14 +60,15 @@
 (defmethod input-empty-p ((input index-stream))
   (declare (optimize (speed 3) (debug 0) (safety 0)))
   (= (the index-position (index-position input))
-     (the index-position (if *bound*
-                       (min #1=(length (the array (index-stream-buffer input)))
-                            (the index-position *bound*))
-                       #1#))))
+     (the index-position
+          (if *bound*
+              (min #1=(length (the vector (index-stream-buffer input)))
+                   (the index-position *bound*))
+              #1#))))
 
 (defmethod input-first  ((input index-stream))
   (declare (optimize (speed 3) (debug 0) (safety 0)))
-  (aref (the array (index-stream-buffer input))
+  (aref (the vector (index-stream-buffer input))
         (the index-position (index-position input))))
 
 (defmethod input-rest  ((input index-stream))
@@ -77,10 +78,10 @@
         (stream (index-stream-stream input)))
     (let ((next-position (1+ (the index-position position))))
       (unless (< (the index-position next-position)
-                 (the index-position (length (the array buffer))))
+                 (the index-position (length (the vector buffer))))
         (fill-buffer buffer stream))
       (make-index-stream :stream (the stream stream)
-                         :buffer (the array buffer)
+                         :buffer (the vector buffer)
                          :position (the index-position next-position)))))
 
 (defmethod input-element-type ((input index-stream))
@@ -93,5 +94,5 @@
         (stream (index-stream-stream input)))
     (make-array length
                 :element-type (element-type (the stream stream))
-                :displaced-to (the array buffer)
+                :displaced-to (the vector buffer)
                 :displaced-index-offset (the index-position position))))

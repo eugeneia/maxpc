@@ -57,7 +57,7 @@
 
 (defun run-input-benchmarks ()
   (let ((any (maxpc:%any (maxpc:?satisfies (constantly t)))))
-    (format t "~&# size list array stream file-stream~%")
+    (format t "~&# size list vector stream file-stream~%")
     (loop for series in '(#p"benchmarks/zero1"
                           #p"benchmarks/zero2"
                           #p"benchmarks/zero3"

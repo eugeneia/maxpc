@@ -255,7 +255,7 @@
 (defpackage maxpc.input.list
   (:use :cl :maxpc.input :maxpc.input.index))
 
-(defpackage maxpc.input.array
+(defpackage maxpc.input.vector
   (:use :cl :maxpc.input :maxpc.input.index))
 
 (defpackage maxpc.input.stream

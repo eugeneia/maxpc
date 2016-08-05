@@ -19,9 +19,9 @@
 
     *Arguments and Values:*
 
-    _input-_—an _input_.
+    _input_—an _input_.
 
-    _empty-p-_—a _generalized boolean_.
+    _empty-p_—a _generalized boolean_.
 
     *Description:*
 
@@ -31,7 +31,7 @@
   (:documentation
    "*Arguments and Values:*
 
-    _input-_—an _input_.
+    _input_—an _input_.
 
     *Description:*
 
@@ -45,7 +45,7 @@
   (:documentation
    "*Arguments and Values:*
 
-    _input-_—an _input_.
+    _input_—an _input_.
 
     *Description:*
 
@@ -61,9 +61,9 @@
 
     *Arguments and Values:*
 
-    _input-_—an _input_.
+    _input_—an _input_.
 
-    _position-_—an _integer_ between 0 and {array-dimension-limit} inclusively.
+    _position_—an _integer_ between 0 and {array-dimension-limit} inclusively.
 
     *Description:*
 
@@ -75,9 +75,9 @@
 
     *Arguments and Values:*
 
-    _input-_—an _input_.
+    _input_—an _input_.
 
-    _typespec-_—a _type specifier_.
+    _typespec_—a _type specifier_.
 
     *Description:*
 
@@ -90,11 +90,11 @@
 
     *Arguments and Values:*
 
-    _input-_—an _input_.
+    _input_—an _input_.
 
-    _length-_—an _integer_ between 0 and {array-dimension-limit} inclusively.
+    _length_—an _integer_ between 0 and {array-dimension-limit} inclusively.
 
-    _sequence-_—a _sequence_.
+    _sequence_—a _sequence_.
 
     *Description:*
 
