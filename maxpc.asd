@@ -20,7 +20,7 @@
                (:file "interface"
                       :depends-on ("packages" "input" "input/stream"))
                (:file "primitives"
-                      :depends-on ("packages" "input"))
+                      :depends-on ("packages" "input" "interface"))
                (:file "more"
                       :depends-on ("packages" "primitives"))
                (:file "char"

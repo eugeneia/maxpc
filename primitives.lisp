@@ -2,9 +2,6 @@
 
 (in-package :maxpc)
 
-(defvar *hit*)
-(defvar *miss*)
-
 (defmacro with-parser ((input-sym) &body forms
                        &aux (cache-sym (gensym "cache")))
   `(let ((,cache-sym (make-sparse-vector)))

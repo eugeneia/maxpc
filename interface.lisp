@@ -12,6 +12,9 @@
 
 (defvar *input-fail*)
 
+(defvar *hit*)
+(defvar *miss*)
+
 (defun parse (input-source parser)
   "→ _result_, _match‑p_, _end‑p_
 
