@@ -18,7 +18,7 @@
                (:file "input/stream"
                       :depends-on ("packages" "input" "input/index"))
                (:file "interface"
-                      :depends-on ("packages" "input" "input/stream"))
+                      :depends-on ("packages" "input"))
                (:file "primitives"
                       :depends-on ("packages" "input"))
                (:file "more"
