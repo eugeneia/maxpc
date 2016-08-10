@@ -89,10 +89,7 @@
 
 (defmethod input-sequence ((input index-stream) (length integer))
   (declare (optimize (speed 3) (debug 0) (safety 0)))
-  (let ((position (index-position input))
-        (buffer (index-stream-buffer input))
-        (stream (index-stream-stream input)))
-    (make-array length
-                :element-type (element-type (the stream stream))
-                :displaced-to (the vector buffer)
-                :displaced-index-offset (the index-position position))))
+  (make-array (the index-position length)
+              :element-type (input-element-type input)
+              :displaced-to (index-stream-buffer input)
+              :displaced-index-offset (index-position input)))
