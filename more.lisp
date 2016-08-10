@@ -29,7 +29,7 @@
 
    *Description:*
 
-   {%not} matches the next element unless _parser_ matches.
+   {?not} matches the next element unless _parser_ matches.
 
    *Examples:*
 
