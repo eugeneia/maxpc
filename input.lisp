@@ -29,9 +29,14 @@
 
 (defgeneric input-first (input)
   (:documentation
-   "*Arguments and Values:*
+   "→ _element_
 
-    _input_—an _input_.
+    *Arguments and Values:*
+
+    _input_—a non-empty _input_.
+
+    _element_—an _object_ of the _type_ designated by the _type specifier_
+    returned by {input-element-type} when called on _input_.
 
     *Description:*
 
@@ -39,21 +44,25 @@
 
     *Exceptional Situations:*
 
-    If _input_ is empty an _error_ of _type_ {error} may be signaled."))
+    If _input_ is empty the behavior of {input-first} is unspecified."))
 
 (defgeneric input-rest (input)
   (:documentation
-   "*Arguments and Values:*
+   "→ _rest_
 
-    _input_—an _input_.
+    *Arguments and Values:*
+
+    _input_—a non-empty _input_.
+
+    _rest_—the remaining _input_.
 
     *Description:*
 
-    {input-rest} returns a copy of _input_ with the first element stripped.
+    {input-rest} returns the remaining _input_ without the first element.
 
     *Exceptional Situations:*
 
-    If _input_ is empty an _error_ of _type_ {error} may be signaled."))
+    If _input_ is empty the behavior of {input-rest} is unspecified."))
 
 (defgeneric input-position (input)
   (:documentation
@@ -81,7 +90,7 @@
 
     *Description:*
 
-    {input-element-type} returns a _type specifier_ that designated the _type_
+    {input-element-type} returns a _type specifier_ that designates the _type_
     of the elements in _input_."))
 
 (defgeneric input-sequence (input length)
@@ -103,8 +112,8 @@
 
     *Exceptional Situations:*
 
-    If the number of elements in _input_ are less than _length_ an _error_ of
-    _type_ {error} may be signaled."))
+    If the number of elements in _input_ are less than _length_ the behavior of
+    {input-sequence} is unspecified."))
 
 
 ;;; Generic implementation for optional methods
