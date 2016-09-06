@@ -1,6 +1,6 @@
 ;;;; System definition for MaxPC.
 
-(defsystem maxpc
+(asdf:defsystem maxpc
   :description
   "Max’s Parser Combinators: a simple and pragmatic library for writing parsers
   and lexers based on combinatory parsing."
@@ -27,4 +27,4 @@
                       :depends-on ("packages" "primitives" "more"))
                (:file "digit"
                       :depends-on ("packages" "primitives" "more")))
-  :in-order-to ((test-op (test-op :maxpc-test))))
+  :in-order-to ((asdf:test-op (asdf:test-op :maxpc-test))))
