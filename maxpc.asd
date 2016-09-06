@@ -1,5 +1,7 @@
 ;;;; System definition for MaxPC.
 
+(in-package :asdf-user)
+
 (defsystem maxpc
   :description
   "Max’s Parser Combinators: a simple and pragmatic library for writing parsers

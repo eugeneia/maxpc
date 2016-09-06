@@ -1,5 +1,7 @@
 ;;;; System definition for MaxPC test and benchmark suite.
 
+(in-package :asdf-user)
+
 (defsystem maxpc-test
   :description
   "Test and benchmark suite for MaxPC."
