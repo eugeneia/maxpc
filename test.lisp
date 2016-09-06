@@ -147,7 +147,7 @@
   (passert "f423" (=natural-number 16) (= result #xf423))
   (passert "f423" (=integer-number 16) (= result #xf423))
   (passert "+f423" (=integer-number 16) (= result #xf423))
-  (passert "-f423" (=integer-number 16) (= #x-f423))
+  (passert "-f423" (=integer-number 16) (= result #x-f423))
   (passert-n "a1234" (=integer-number))
   (passert "1234a" (=integer-number) (= result 1234) match-p (null end-p)))
 
