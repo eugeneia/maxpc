@@ -126,7 +126,7 @@
   (declare (ignore input))
   0)
 
-(defmethod input-sequence (_input (length integer))
+(defmethod input-sequence (input (length integer))
   (loop for i from 1 to length
-        for input = _input then (input-rest input)
-     collect (input-first input)))
+        for rest = input then (input-rest rest)
+     collect (input-first rest)))
