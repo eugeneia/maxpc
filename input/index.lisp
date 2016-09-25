@@ -4,8 +4,7 @@
 
 (deftype index-position ()
   "Array index type used in index structure."
-  (upgraded-array-element-type
-   `(integer 0 ,array-dimension-limit)))
+  `(integer 0 ,(1- array-dimension-limit)))
 
 (defstruct index
   "Generic index."
