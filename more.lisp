@@ -10,7 +10,7 @@
    *Description:*
 
    {%maybe} matches _parser_ or nothing all, but always succeeds. If _parser_
-   matched and produced a result value then {%maybe} produces the value as its
+   matches and produces a result value then {%maybe} produces that value as its
    result value.
 
    *Examples:*

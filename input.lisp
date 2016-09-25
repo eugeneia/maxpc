@@ -76,7 +76,10 @@
 
     *Description:*
 
-    {input-position} returns the _position_ of _input_."))
+    {input-position} returns the _position_ of _input_.")
+  (:method ((input t))
+    (declare (ignore input))
+    0))
 
 (defgeneric input-element-type (input)
   (:documentation
@@ -91,7 +94,10 @@
     *Description:*
 
     {input-element-type} returns a _type specifier_ that designates the _type_
-    of the elements in _input_."))
+    of the elements in _input_.")
+  (:method ((input t))
+    (declare (ignore input))
+    t))
 
 (defgeneric input-sequence (input length)
   (:documentation
@@ -113,20 +119,8 @@
     *Exceptional Situations:*
 
     If the number of elements in _input_ are less than _length_ the behavior of
-    {input-sequence} is unspecified."))
-
-
-;;; Generic implementation for optional methods
-
-(defmethod input-element-type (input)
-  (declare (ignore input))
-  t)
-
-(defmethod input-position (input)
-  (declare (ignore input))
-  0)
-
-(defmethod input-sequence (input (length integer))
-  (loop for i from 1 to length
-        for rest = input then (input-rest rest)
-     collect (input-first rest)))
+    {input-sequence} is unspecified.")
+  (:method ((input t) (length integer))
+    (loop for i from 1 to length
+          for rest = input then (input-rest rest)
+       collect (input-first rest))))
