@@ -1,6 +1,6 @@
 ;;;; System definition for MaxPC.
 
-(in-package :asdf-user)
+#+asdf3 (in-package :asdf-user)
 
 (defsystem maxpc
   :description
@@ -29,4 +29,4 @@
                       :depends-on ("packages" "primitives" "more"))
                (:file "digit"
                       :depends-on ("packages" "primitives" "more")))
-  :in-order-to ((test-op (test-op :maxpc-test))))
+  :in-order-to (#+asdf3 (test-op (test-op :maxpc-test))))
