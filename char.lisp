@@ -16,7 +16,7 @@
 
    *Exceptional Situations:*
 
-   If the next element is not a _character_ an _error_ of _type_ {type‑error}
+   If the next element is not a _character_ an _error_ of _type_ {type-error}
    is signaled."
   (if case-sensitive-p
       (?test ('char= char))
@@ -37,7 +37,7 @@
    *Exceptional Situations:*
 
    If an element attempted to be matched is not a _character_ an _error_ of
-   _type_ {type‑error} is signaled."
+   _type_ {type-error} is signaled."
   (apply '?seq (loop for char across string collect
                     (?char char case-sensitive-p))))
 
@@ -58,7 +58,7 @@
 
    *Exceptional Situations:*
 
-   If the next element is not a _character_ an _error_ of _type_ {type‑error}
+   If the next element is not a _character_ an _error_ of _type_ {type-error}
    is signaled."
   (?test ('member *whitespace* :test 'char=)))
 
@@ -90,7 +90,7 @@
    *Exceptional Situations:*
 
    If an element attempted to be matched is not a _character_ an _error_ of
-   _type_ {type‑error} is signaled."
+   _type_ {type-error} is signaled."
   (=destructure (line _)
       (%or (=list (=subseq (%any (?not (?newline)))) (?newline))
            (=list (=subseq (%some (?not (?end)))) (?end)))

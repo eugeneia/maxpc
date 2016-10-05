@@ -84,7 +84,7 @@
 
      First we define a parser for the valid characters in the _user_ and _host_
      parts of an address. Just for this example, we choose these to be
-     alphanumeric characters and then some. {?address‑character} uses the {%or}
+     alphanumeric characters and then some. {?address-character} uses the {%or}
      combinator to form the union of two instances of {?satisfies} that match
      different sets of characters.
 
@@ -95,10 +95,10 @@
                           (member c '(#\\- #\\_ #\\. #\\+))))))
      #
 
-     Then we use {?address‑character} to implement our address parser which
+     Then we use {?address-character} to implement our address parser which
      matches two sequences of “address characters” separated by an {@}
      character, and produces a list of user and host components as its result
-     value. We match {?address‑character} one or more times using {%some}, and
+     value. We match {?address-character} one or more times using {%some}, and
      produce the matched subsequence as the result value using {=subseq}. Both
      parts of the address separated by an _@_ character are matched in sequence
      using {=list}, whose result value is finally transformed by
@@ -113,7 +113,7 @@
          (list user host))))
      #
 
-     We can now apply {=email‑address} using {parse}:
+     We can now apply {=email-address} using {parse}:
 
      #code#
      (parse \"foo_bar@example.com\" (=email-address))
@@ -176,9 +176,9 @@
      < Error Handling
 
       + {?fail} never matches and evaluates its body when it is called.
-      + {%handler‑case} and {%restart‑case} allow you to set up _handlers_ and
+      + {%handler-case} and {%restart-case} allow you to set up _handlers_ and
         _restarts_ across parsers.
-      + {get‑input‑position} can be called in error situations to retrieve the
+      + {get-input-position} can be called in error situations to retrieve the
         current position in the input.
 
      >
