@@ -39,8 +39,9 @@
     + 1. MaxPC is a complete rewrite of [MPC](https://github.com/eugeneia/mpc)
          with was in turn a fork of Drew Crampsie’s
          [Smug](http://smug.drewc.ca/).
-    + 2. Unbacked claim: the book keeping costs of Packrat parsing diminish the
-         gain in execution time for typical grammars and workloads.
+    + 2. See [MaxPC: Why? How? / Packrat Parsing](http://mr.gy/blog/maxpc.html#section-3-1)
+         on why the book keeping costs of Packrat parsing diminish the gain in
+         execution time for typical grammars and workloads.
 
     < Basic Concepts
 
