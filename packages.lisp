@@ -111,7 +111,7 @@
            (=list (=subseq (%some (?address-character)))
                   (?eq #\\@)
                   (=subseq (%some (?address-character))))
-         (list user host))))
+         (list user host)))
      #
 
      We can now apply {=email-address} using {parse}:
