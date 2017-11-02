@@ -134,20 +134,20 @@ and %RESTART-CASE."))
    *Examples:*
 
    #code#
+   (defun assert-digit (c)
+     (if (digit-char-p c)
+         c
+         (error \"Not a digit: ~c\" c)))
+
    (parse \"01x2\"
-          (%any (%handler-case
-                    (=transform
-                     (=element)
-                     (lambda (c)
-                       (if (digit-char-p c)
-                           c
-                           (error \"Not a digit: ~c\" c))))
+          (%any (%handler-case (%and (?satisfies 'assert-digit)
+                                     (=element))
                   (error (e)
                     (format t \"Error at position ~a: ~a~%\"
                             (get-input-position) e)
                     (?seq (=element))))))
    ▷ Error at position 2: Not a digit: x
-   → (#\\0 #\\1 #\\2), T, T
+   → (\"0\" \"1\" \"2\"), T, T
    #
 
    *See Also:*

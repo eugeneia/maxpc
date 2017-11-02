@@ -21,8 +21,8 @@
   (?satisfies 'alphanumericp))
 
 (defun ?string-char ()
-  (%or (?satisfies 'not-doublequote)
-       (?seq (?eq #\\) (?eq #\"))))
+  (%or (?seq (?eq #\\) (?eq #\"))
+       (?satisfies 'not-doublequote)))
 
 ;;; Here we go: an S-expression is either a list or an atom, with possibly
 ;;; leading whitespace.
