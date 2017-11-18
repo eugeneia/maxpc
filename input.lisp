@@ -29,9 +29,14 @@
 
 (defgeneric input-first (input)
   (:documentation
-   "*Arguments and Values:*
+   "→ _element_
 
-    _input_—an _input_.
+    *Arguments and Values:*
+
+    _input_—a non-empty _input_.
+
+    _element_—an _object_ of the _type_ designated by the _type specifier_
+    returned by {input-element-type} when called on _input_.
 
     *Description:*
 
@@ -39,21 +44,25 @@
 
     *Exceptional Situations:*
 
-    If _input_ is empty an _error_ of _type_ {error} may be signaled."))
+    If _input_ is empty the behavior of {input-first} is unspecified."))
 
 (defgeneric input-rest (input)
   (:documentation
-   "*Arguments and Values:*
+   "→ _rest_
 
-    _input_—an _input_.
+    *Arguments and Values:*
+
+    _input_—a non-empty _input_.
+
+    _rest_—the remaining _input_.
 
     *Description:*
 
-    {input-rest} returns a copy of _input_ with the first element stripped.
+    {input-rest} returns the remaining _input_ without the first element.
 
     *Exceptional Situations:*
 
-    If _input_ is empty an _error_ of _type_ {error} may be signaled."))
+    If _input_ is empty the behavior of {input-rest} is unspecified."))
 
 (defgeneric input-position (input)
   (:documentation
@@ -67,7 +76,10 @@
 
     *Description:*
 
-    {input-position} returns the _position_ of _input_."))
+    {input-position} returns the _position_ of _input_.")
+  (:method ((input t))
+    (declare (ignore input))
+    0))
 
 (defgeneric input-element-type (input)
   (:documentation
@@ -81,8 +93,11 @@
 
     *Description:*
 
-    {input-element-type} returns a _type specifier_ that designated the _type_
-    of the elements in _input_."))
+    {input-element-type} returns a _type specifier_ that designates the _type_
+    of the elements in _input_.")
+  (:method ((input t))
+    (declare (ignore input))
+    t))
 
 (defgeneric input-sequence (input length)
   (:documentation
@@ -103,21 +118,9 @@
 
     *Exceptional Situations:*
 
-    If the number of elements in _input_ are less than _length_ an _error_ of
-    _type_ {error} may be signaled."))
-
-
-;;; Generic implementation for optional methods
-
-(defmethod input-element-type (input)
-  (declare (ignore input))
-  t)
-
-(defmethod input-position (input)
-  (declare (ignore input))
-  0)
-
-(defmethod input-sequence (input (length integer))
-  (loop for i from 1 to length
-        for input = input then (input-rest input)
-     collect (input-first input)))
+    If the number of elements in _input_ are less than _length_ the behavior of
+    {input-sequence} is unspecified.")
+  (:method ((input t) (length integer))
+    (loop for i from 1 to length
+          for rest = input then (input-rest rest)
+       collect (input-first rest))))

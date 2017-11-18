@@ -13,7 +13,7 @@
 
    *Exceptional Situations:*
 
-   If the next element is not a _character_ an _error_ of _type_ {type‑error}
+   If the next element is not a _character_ an _error_ of _type_ {type-error}
    is signaled."
   (?test ('digit-char-p radix)))
 
@@ -24,7 +24,7 @@
 
    *Description:*
 
-   {=natural‑number} matches one or more digit _characters_ in the specified
+   {=natural-number} matches one or more digit _characters_ in the specified
    _radix_ in sequence, and produces the natural _number_ represented by that
    digit sequence as its result value.
 
@@ -38,7 +38,7 @@
    *Exceptional Situations:*
 
    If an element attempted to be matched is not a _character_ an _error_ of
-   _type_ {type‑error} is signaled."
+   _type_ {type-error} is signaled."
   (=transform (=subseq (%some (?digit radix)))
               (lambda (digits)
                 (parse-integer digits :radix radix))))
@@ -50,7 +50,7 @@
 
    *Description:*
 
-   {=integer‑number} matches one or more digit _characters_ in the specified
+   {=integer-number} matches one or more digit _characters_ in the specified
    _radix_, optionally lead by a sign character, in sequence, and produces the
    _integer_ represented by that sequence as its result value. The leading sign
    can be {#\\\\+} and {#\\\\-} for positive and negative values respectively.
@@ -68,7 +68,7 @@
    *Exceptional Situations:*
 
    If an element attempted to be matched is not a _character_ an _error_ of
-   _type_ {type‑error} is signaled."
+   _type_ {type-error} is signaled."
   (=destructure (sign number)
       (=list (%maybe (%and (?test ('member '(#\+ #\-))) (=element)))
              (=natural-number radix))

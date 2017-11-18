@@ -1,5 +1,7 @@
 ;;;; System definition for MaxPC test and benchmark suite.
 
+#+asdf3 (in-package :asdf-user)
+
 (defsystem maxpc-test
   :description
   "Test and benchmark suite for MaxPC."
@@ -9,4 +11,4 @@
                (:file "bench")
                (:file "example-sexp"))
   :depends-on ("maxpc")
-  :perform (test-op (o s) (uiop:symbol-call :maxpc.test :run-tests)))
+  :perform (test-op (o s) #+asdf3 (uiop:symbol-call :maxpc.test :run-tests)))

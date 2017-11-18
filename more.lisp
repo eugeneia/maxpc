@@ -10,7 +10,7 @@
    *Description:*
 
    {%maybe} matches _parser_ or nothing all, but always succeeds. If _parser_
-   matched and produced a result value then {%maybe} produces the value as its
+   matches and produces a result value then {%maybe} produces that value as its
    result value.
 
    *Examples:*
@@ -29,7 +29,7 @@
 
    *Description:*
 
-   {%not} matches the next element unless _parser_ matches.
+   {?not} matches the next element unless _parser_ matches.
 
    *Examples:*
 
@@ -94,7 +94,7 @@
    *Exceptional Situations:*
 
    If _test_ accepts less arguments than the number of _arguments_ plus one an
-   _error_ of _type_ {program‑error} is signaled.
+   _error_ of _type_ {program-error} is signaled.
 
    *See also:*
 
@@ -139,7 +139,7 @@
    *Description:*
 
    {=destructure} matches _parser_ and destructures its result value as if by
-   {destructuring‑bind}. The {_} (underscore) symbol can occur in _lambda‑list_
+   {destructuring-bind}. The {_} (underscore) symbol can occur in _lambda‑list_
    any number of times, and is substituted with a _fresh_, _uninterned symbol_
    and declared {ignorable}. If _parser_ matches {=destructure} evaluates
    _forms_ and produces the value of the last _form_ as its result value. If no
@@ -166,11 +166,11 @@
    *Exceptional Situations:*
 
    If the result value of _parser_ does not match the destructuring pattern, an
-   _error_ of _type_ {program‑error} is signaled.
+   _error_ of _type_ {program-error} is signaled.
 
    *See Also:*
 
-   {destructuring‑bind}"
+   {destructuring-bind}"
   (let* ((ignorable-syms)
          (lambda-list (loop for symbol in lambda-list collect
                            (if (string= "_" (symbol-name symbol))

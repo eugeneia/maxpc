@@ -70,19 +70,19 @@
 
    *Description:*
 
-   {get‑input‑position} returns the number of elements read from the input so
+   {get-input-position} returns the number of elements read from the input so
    far. Additionally, _line_ and _column_ positions are returned if the input's
    _element type_ is {character}. Lines are counted starting at one while
    columns are counted starting from zero.
 
-   {get‑input‑position} may only be called from within the body of {?fail}, the
-   handlers of {%handler‑case} or the restarts of {%restart‑case}.
+   {get-input-position} may only be called from within the body of {?fail}, the
+   handlers of {%handler-case} or the restarts of {%restart-case}.
 
    *Exceptional Situations:*
 
-   If {get‑input‑position} is not evaluated within the dynamic context of
-   {?fail}, {%handler‑case} or {%restart‑case} an _error_ of _type_
-   {simple‑error} is signaled."
+   If {get-input-position} is not evaluated within the dynamic context of
+   {?fail}, {%handler-case} or {%restart-case} an _error_ of _type_
+   {simple-error} is signaled."
   (unless *input-fail*
     (error "GET-INPUT-POSITION may only be called inside ?FAIL, %HANDLER-CASE
 and %RESTART-CASE."))
@@ -126,22 +126,21 @@ and %RESTART-CASE."))
 
    *Description:*
 
-   {%handler‑case} executes _parser_ in a _dynamic environment_ where handlers
-   are active as if by {handler‑case}. If a _condition_ is handled by
-   {%handler‑case}, _parser‑form_ is evaluated and the resulting _parser_ is
+   {%handler-case} executes _parser_ in a _dynamic environment_ where handlers
+   are active as if by {handler-case}. If a _condition_ is handled by
+   {%handler-case}, _parser‑form_ is evaluated and the resulting _parser_ is
    applied.
 
    *Examples:*
 
    #code#
+   (defun assert-digit (c)
+     (or (digit-char-p c)
+         (error \"Not a digit: ~c\" c)))
+
    (parse \"01x2\"
-          (%any (%handler-case
-                    (=transform
-                     (=element)
-                     (lambda (c)
-                       (if (digit-char-p c)
-                           c
-                           (error \"Not a digit: ~c\" c))))
+          (%any (%handler-case (%and (?satisfies 'assert-digit)
+                                     (=element))
                   (error (e)
                     (format t \"Error at position ~a: ~a~%\"
                             (get-input-position) e)
@@ -152,7 +151,7 @@ and %RESTART-CASE."))
 
    *See Also:*
 
-   {handler‑case}."
+   {handler-case}."
   `(let ((,parser-sym ,parser))
      (lambda (,input-sym)
        (let ((*input-fail* ,input-sym))
@@ -183,7 +182,7 @@ and %RESTART-CASE."))
 
    _report‑expression_—a _string_, a _symbol_, or a _lambda expression_.
 
-   _test‑expression_—a _symbol or a _lambda expression_.
+   _test‑expression_—a _symbol_ or a _lambda expression_.
 
    _declaration_—a {declare} _expression_; not evaluated.
 
@@ -193,8 +192,8 @@ and %RESTART-CASE."))
 
    *Description:*
 
-   {%restart‑case} executes _parser_ in a _dynamic environment_ where restarts
-   are active as if by {restart‑case}. If control is transferred to a
+   {%restart-case} executes _parser_ in a _dynamic environment_ where restarts
+   are active as if by {restart-case}. If control is transferred to a
    _restart‑clause_, _parser‑form_ is evaluated and the resulting _parser_ is
    applied.
 
@@ -223,7 +222,7 @@ and %RESTART-CASE."))
 
    *See Also:*
 
-   {restart‑case}."
+   {restart-case}."
   `(let ((,parser-sym ,parser))
      (lambda (,input-sym)
        (let ((*input-fail* ,input-sym))

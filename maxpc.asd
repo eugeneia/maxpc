@@ -1,5 +1,7 @@
 ;;;; System definition for MaxPC.
 
+#+asdf3 (in-package :asdf-user)
+
 (defsystem maxpc
   :description
   "Max’s Parser Combinators: a simple and pragmatic library for writing parsers
@@ -18,7 +20,7 @@
                (:file "input/stream"
                       :depends-on ("packages" "input" "input/index"))
                (:file "interface"
-                      :depends-on ("packages" "input" "input/stream"))
+                      :depends-on ("packages" "input"))
                (:file "primitives"
                       :depends-on ("packages" "input"))
                (:file "more"
@@ -27,4 +29,4 @@
                       :depends-on ("packages" "primitives" "more"))
                (:file "digit"
                       :depends-on ("packages" "primitives" "more")))
-  :in-order-to ((test-op (test-op :maxpc-test))))
+  :in-order-to (#+asdf3 (test-op (test-op :maxpc-test))))
