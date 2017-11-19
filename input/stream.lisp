@@ -30,13 +30,12 @@
 (defgeneric fill-buffer (buffer stream))
 
 (defmethod fill-buffer ((buffer vector) (stream stream))
-  (handler-case (vector-push-extend
-                 (case (element-type stream)
-                   (character (read-char stream))
-                   (otherwise (read-byte stream)))
-                 buffer
-                 (the fixnum *chunk-size*))
-    (end-of-file (error) (declare (ignore error)))))
+  (declare (optimize (speed 3) (debug 0) (safety 0)))
+  (let ((next (case (element-type stream)
+                (character (read-char stream nil 'eof))
+                (otherwise (read-byte stream nil 'eof)))))
+    (unless (eq next 'eof)
+      (vector-push-extend next buffer (the fixnum *chunk-size*)))))
 
 (defmethod fill-buffer ((buffer vector) (stream file-stream))
   (let* ((file-length (file-length stream))
