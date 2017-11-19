@@ -30,13 +30,12 @@
 (defgeneric fill-buffer (buffer stream))
 
 (defmethod fill-buffer ((buffer vector) (stream stream))
-  (handler-case (vector-push-extend
-                 (case (element-type stream)
-                   (character (read-char stream))
-                   (otherwise (read-byte stream)))
-                 buffer
-                 (the fixnum *chunk-size*))
-    (end-of-file (error) (declare (ignore error)))))
+  (declare (optimize (speed 3) (debug 0) (safety 0)))
+  (let ((next (case (element-type stream)
+                (character (read-char stream nil 'eof))
+                (otherwise (read-byte stream nil 'eof)))))
+    (unless (eq next 'eof)
+      (vector-push-extend next buffer (the fixnum *chunk-size*)))))
 
 (defmethod fill-buffer ((buffer vector) (stream file-stream))
   (let* ((file-length (file-length stream))
@@ -57,8 +56,21 @@
     (fill-buffer buffer input-source)
     (make-index-stream :stream input-source :buffer buffer)))
 
+(declaim (inline maybe-fill-buffer)
+         (ftype (function (index-stream)) maybe-fill-buffer))
+(defun maybe-fill-buffer (input)
+  (declare (optimize (speed 3) (debug 0) (safety 0)))
+  (let ((position (index-position input))
+        (buffer (index-stream-buffer input))
+        (stream (index-stream-stream input)))
+    (unless (> (the index-position (length (the vector buffer)))
+               (the index-position position))
+      (fill-buffer buffer stream)))
+  (values))
+
 (defmethod input-empty-p ((input index-stream))
   (declare (optimize (speed 3) (debug 0) (safety 0)))
+  (maybe-fill-buffer input)
   (= (the index-position (index-position input))
      (the index-position
           (if *bound*
@@ -68,6 +80,7 @@
 
 (defmethod input-first  ((input index-stream))
   (declare (optimize (speed 3) (debug 0) (safety 0)))
+  (maybe-fill-buffer input)
   (aref (the vector (index-stream-buffer input))
         (the index-position (index-position input))))
 
@@ -77,9 +90,6 @@
         (buffer (index-stream-buffer input))
         (stream (index-stream-stream input)))
     (let ((next-position (1+ (the index-position position))))
-      (unless (< (the index-position next-position)
-                 (the index-position (length (the vector buffer))))
-        (fill-buffer buffer stream))
       (make-index-stream :stream (the stream stream)
                          :buffer (the vector buffer)
                          :position (the index-position next-position)))))
