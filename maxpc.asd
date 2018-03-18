@@ -23,8 +23,10 @@
                       :depends-on ("packages" "input"))
                (:file "primitives"
                       :depends-on ("packages" "input"))
+               (:file "backtracking"
+                      :depends-on ("packages"))
                (:file "more"
-                      :depends-on ("packages" "primitives"))
+                      :depends-on ("packages" "primitives" "backtracking"))
                (:file "char"
                       :depends-on ("packages" "primitives" "more"))
                (:file "digit"

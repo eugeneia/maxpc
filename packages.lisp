@@ -227,7 +227,11 @@
            :%diff
            :%maybe
            :=transform
-           :=destructure))
+           :=destructure
+           :?either
+           :?path
+           :?all
+           :?optional))
 
 (defpackage maxpc.char
   (:documentation
