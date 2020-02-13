@@ -197,7 +197,7 @@
 
      #code#
      (defun ?parens ()
-       (?seq (?eq #\\() (%maybe '?parens/parser) (?eq #\\)))))
+       (?seq (?eq #\\() (%maybe '?parens/parser) (?eq #\\))))
 
      (setf (fdefinition '?parens/parser) (?parens))
 
