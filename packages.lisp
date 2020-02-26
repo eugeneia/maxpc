@@ -141,7 +141,7 @@
         _sequence_.
       + {=subseq} produces the subsequence matched by its argument as its
         result value.
-      + {?satisifies}, {?test}, and {?eq} match input conditionally.
+      + {?satisfies}, {?test}, and {?eq} match input conditionally.
       + {%maybe} matches, even if its argument fails to match.
 
      >
@@ -197,7 +197,7 @@
 
      #code#
      (defun ?parens ()
-       (?seq (?eq #\\() (%maybe '?parens/parser) (?eq #\\)))))
+       (?seq (?eq #\\() (%maybe '?parens/parser) (?eq #\\))))
 
      (setf (fdefinition '?parens/parser) (?parens))
 
