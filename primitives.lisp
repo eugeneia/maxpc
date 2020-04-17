@@ -302,7 +302,7 @@
 
    *Description:*
 
-   {%transform} matches _parser_ and produces the result of applying _function_
+   {=transform} matches _parser_ and produces the result of applying _function_
    to the result value of _parser_ as its result value.
 
    *Examples:*
